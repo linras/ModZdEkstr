@@ -1,1 +1,3 @@
-# ModZdEkstr
+# MODELOWANIE ZDARZEÑ EKSTREMALNYCH
+
+Zadania na laboratoria
