@@ -1,0 +1,76 @@
+\documentclass[12pt]{report}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage[polish]{babel}
+\usepackage[cp1250]{inputenc}
+\usepackage{t1enc}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{color}
+
+\textwidth=15cm \textheight=24cm \oddsidemargin=0.5cm
+\topmargin=-0.5cm
+\textwidth=15cm \textheight=24cm \oddsidemargin=0.5cm
+\topmargin=-2cm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator{\R}{\mathbb{R}}
+\def\\{\hfill\break}
+\def\1{{\mathbf 1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\centerline{\large Analiza 1}
+\bigskip
+\centerline{\large Estymacja parametrów rozk³adu  na podstawie danej próby}
+\bigskip
+
+\centerline{ Imiê  i nazwisko}
+\bigskip
+
+\\Na podstawie wybranych przez siebie dwóch rodzajów danych: z rozk³adu ci¹g³ego i z rozk³adu dyskretnego, zrób poni¿sze analizy.
+
+\\{\bf 1. Krótki opis wybranych danych. } Kilka zdañ, co to za dane, za jaki okres.
+
+\\{\bf 2. Wstêpna analiza danych.}
+Oblicz œredni¹ empiryczn¹, odchylenie standardowe, skoœnoœæ i kurtozê. Zamieœæ np. w tabeli
+
+$$\begin {array} {|c|c|c|c|c|}
+\hline
+      & \overline x& \mbox{odch. st.}& \mbox{skoœnoœæ}& \mbox{kurtoza}\\
+\hline              
+\mbox{Kurs}&  8,2& 3,16&  1,08&  0,22\\
+\hline
+\end{array}$$
+
+\\Zrób histogram, wykres skoœnoœæ-kurtoza z pakietu  \texttt{fitdistrplus} (zamieœæ wykresy). Na tej podstawie wytypuj dwa ró¿ne rozk³ady dyskretne i dwa ci¹g³e do dalszej analizy.
+
+\centerline{\includegraphics[width=7cm]{wykres_SK.png}}
+
+\\{\bf 3. Estymacja parametrów wybranych rozk³adów -- analiza wstêpna.}
+Korzystaj¹c  z funkcji   \texttt{fitdist}  w pakiecie \texttt{fitdistrplus}, wyestymuj parametry wybranych rozk³adów.
+Nastêpnie zrób cztery omawiane wykresy diagnostyczne. Na ich podstawie wstêpnie ustal, który z dwóch wybranych rozk³adów lepiej opisuje dane.
+
+\begin{minipage}[c]{14cm}
+\includegraphics[width=14cm]{wykresy.png}
+\end{minipage}
+\bigskip
+
+\\{\bf 4. Analiza pog³êbiona.} PotwierdŸ trafnoœæ swojego wyboru, korzystaj¹c np. z kryteriów AIC, BIC.
+
+
+\\{\bf 5. Zdarzenia rzadkie.} Korzystaj¹c z wybranego rozk³adu, oblicz i  zinterpretuj, w kontekœcie analizowanych danych,  kwantyle rzêdu $0,95$ oraz $0.98$. 
+\bigskip
+
+\noindent{\bf Uwaga.} Na PE zamieszczamy 4 pliki (nazwy plików to: pierwsza du¿a litera imienia, dalej nazwisko rozpoczynaj¹ce siê od du¿ej litery -- bez spacji, podkreœlników i innych znaków miêdzy nimi, dalej cyfry 01 )
+\begin{itemize}
+\item JKantor01.pdf -- w tym pliku ma byæ krótko, precyzyjnie opisana przeprowadzona analiza, w kolejnoœci  podanej wy¿ej,
+\item JKantor01.tex -- plik Ÿród³owy w formacie Tex lub LaTex,
+\item JKantor01.R -- w pliki ca³y u¿yty do obliczeñ kod,
+\item JKantor01.csv -- dane wykorzystane w analizach.
+\end{itemize}
+
+\end{document}
