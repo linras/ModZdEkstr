@@ -1,0 +1,45 @@
+summary statistics
+------
+  min:  46.29856   max:  113.3543 
+median:  72.85654 
+mean:  73.55357 
+estimated sd:  15.4115 
+estimated skewness:  0.2216202 
+estimated kurtosis:  2.09597 
+________________________________________________________________________________________________________________
+
+> summary(fw)
+Fitting of the distribution ' weibull ' by maximum likelihood 
+Parameters : 
+       estimate Std. Error
+shape  5.247305  0.2841308
+scale 79.850691  1.1388744
+Loglikelihood:  -833.0915   AIC:  1670.183   BIC:  1676.78 
+Correlation matrix:
+          shape     scale
+shape 1.0000000 0.3278118
+scale 0.3278118 1.0000000
+
+> summary(fg)
+Fitting of the distribution ' gamma ' by maximum likelihood 
+Parameters : 
+       estimate Std. Error
+shape 22.759269   2.258742
+rate   0.309406   0.031047
+Loglikelihood:  -827.9129   AIC:  1659.826   BIC:  1666.423 
+Correlation matrix:
+          shape      rate
+shape 1.0000000 0.9890307
+rate  0.9890307 1.0000000
+
+> summary(fln)
+Fitting of the distribution ' lnorm ' by maximum likelihood 
+Parameters : 
+         estimate Std. Error
+meanlog 4.2758884 0.01494845
+sdlog   0.2114029 0.01056908
+Loglikelihood:  -828.1675   AIC:  1660.335   BIC:  1666.932 
+Correlation matrix:
+        meanlog sdlog
+meanlog       1     0
+sdlog         0     1
