@@ -43,9 +43,8 @@ descdist(data, boot = 200)
 fw <- fitdist(data, "weibull")
 fg <- fitdist(data, "gamma")
 fln <- fitdist(data, "lnorm")
-summary(fw)
-summary(fg)
-summary(fln)
+#fitp <- fitdist(data, "pois")
+#fitnb <- fitdist(data, "nbinom")
 
 # wykresy diagnostyczne
 par(mfrow = c(1,1))
@@ -54,3 +53,16 @@ denscomp(list(fw, fln, fg), legendtext = plot.legend)
 qqcomp(list(fw, fln, fg), legendtext = plot.legend)
 cdfcomp(list(fw, fln, fg), legendtext = plot.legend)
 ppcomp(list(fw, fln, fg), legendtext = plot.legend)
+
+# kryteria AIC BIC
+summary(fw)
+summary(fg)
+summary(fln)
+
+# kwantyle
+#median(data)
+#quantile(data, probs = 0.5)
+
+quantile(data, probs = 0.98)
+quantile(data, probs = 0.95)
+
