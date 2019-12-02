@@ -43,3 +43,22 @@ Correlation matrix:
         meanlog sdlog
 meanlog       1     0
 sdlog         0     1
+
+
+#dyskretne- Ladder
+Fitting of the distribution ' pois ' by maximum likelihood 
+Parameters : 
+       estimate Std. Error
+lambda     78.5  0.7093695
+Loglikelihood:  -2788.132   AIC:  5578.264   BIC:  5581.314 
+> summary(fitnb)
+Fitting of the distribution ' nbinom ' by maximum likelihood 
+Parameters : 
+      estimate Std. Error
+size  2.007674  0.2235077
+mu   78.488919  4.4907978
+Loglikelihood:  -820.6873   AIC:  1645.375   BIC:  1651.474 
+Correlation matrix:
+             size           mu
+size 1.0000000000 0.0002677606
+mu   0.0002677606 1.0000000000
