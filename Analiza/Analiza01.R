@@ -25,13 +25,13 @@ df <- df %>% as_tibble() %>% mutate(
 data <- df$Weight
 
 # reading second dataset
-df <- read_csv("world-happiness-report-2019.csv") ; df
-#df <- read_csv("AirPassengers.csv") ; df
+#df <- read_csv("world-happiness-report-2019.csv") ; df
+df <- read_csv("AirPassengers.csv") ; df
 
 # retype to numeric
-df$Ladder <- as.numeric(df$Ladder)
+#df$Ladder <- as.numeric(df$Ladder)
 data <- df$Ladder
-#data <- df$`#Passengers`
+data <- df$`#Passengers`
 
 # średnia:
 mean(data)
@@ -68,7 +68,7 @@ ppcomp(list(fw, fln, fg), legendtext = plot.legend)
 
 #dyskretne
 #par("mar")
-#par(mar=c(1,1,1,1))
+par(mar=c(1,1,1,1))
 par(mfrow = c(2,2))
 plot.legend <- c("Poisson", "nbinomial")
 denscomp(list(fitp, fitnb), legendtext = plot.legend)

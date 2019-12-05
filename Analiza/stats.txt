@@ -62,3 +62,101 @@ Correlation matrix:
              size           mu
 size 1.0000000000 0.0002677606
 mu   0.0002677606 1.0000000000
+
+____________________________________________________________________________________________________________________________________________
+Air passangers:
+
+data <- df$`#Passengers`
+> mean(data)
+[1] 280.2986
+> sd(data)
+[1] 119.9663
+> library(moments)
+> skewness(data)
+[1] 0.5770682
+> kurtosis(data)
+[1] 2.606228
+
+> summary(fitp)
+Fitting of the distribution ' pois ' by maximum likelihood 
+Parameters : 
+       estimate Std. Error
+lambda 280.2986   1.395177
+Loglikelihood:  -4139.817   AIC:  8281.635   BIC:  8284.605 
+> summary(fitnb)
+Fitting of the distribution ' nbinom ' by maximum likelihood 
+Parameters : 
+       estimate Std. Error
+size   5.611159  0.6565566
+mu   280.300862  9.9592061
+Loglikelihood:  -884.1104   AIC:  1772.221   BIC:  1778.16 
+Correlation matrix:
+              size            mu
+size  1.000000e+00 -2.601807e-05
+mu   -2.601807e-05  1.000000e+00
+
+> quantile(data, probs = 0.98)
+   98% 
+549.54 
+> quantile(data, probs = 0.95)
+   95% 
+488.15 
+
+__________________________________________________________________________________________________________________________________________
+Weight BACKUP:
+
+> mean(data)
+[1] 73.55357
+> # odchylenie standardowe / standard duration
+> sd(data)
+[1] 15.4115
+> # skośność / skewness oraz kurtoza
+> library(moments)
+> skewness(data)
+[1] 0.2199546
+> kurtosis(data)
+[1] 2.088563
+
+
+> summary(fw)
+Fitting of the distribution ' weibull ' by maximum likelihood 
+Parameters : 
+       estimate Std. Error
+shape  5.247305  0.2841308
+scale 79.850691  1.1388744
+Loglikelihood:  -833.0915   AIC:  1670.183   BIC:  1676.78 
+Correlation matrix:
+          shape     scale
+shape 1.0000000 0.3278118
+scale 0.3278118 1.0000000
+
+> summary(fg)
+Fitting of the distribution ' gamma ' by maximum likelihood 
+Parameters : 
+       estimate Std. Error
+shape 22.759269   2.258742
+rate   0.309406   0.031047
+Loglikelihood:  -827.9129   AIC:  1659.826   BIC:  1666.423 
+Correlation matrix:
+          shape      rate
+shape 1.0000000 0.9890307
+rate  0.9890307 1.0000000
+
+> summary(fln)
+Fitting of the distribution ' lnorm ' by maximum likelihood 
+Parameters : 
+         estimate Std. Error
+meanlog 4.2758884 0.01494845
+sdlog   0.2114029 0.01056908
+Loglikelihood:  -828.1675   AIC:  1660.335   BIC:  1666.932 
+Correlation matrix:
+        meanlog sdlog
+meanlog       1     0
+sdlog         0     1
+
+> quantile(data, probs = 0.98)
+     98% 
+104.8248 
+> quantile(data, probs = 0.95)
+     95% 
+96.39165 
