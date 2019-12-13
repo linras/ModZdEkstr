@@ -1,0 +1,283 @@
+---
+  title: "Uogólniony rozklad Pareto"
+author: "JC"
+date: "6 grudnia 2019"
+output: pdf_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#Przykład 1. Rozklad nadwyżek i analiza dopasowania
+
+
+```{r}
+#Wygebnerujemy probe z rozkladu normalnego o licznosci n=1000
+# i przeanalizujemy nadwyzki nad prog u, ustalony jako kwantyl rzedu
+#q=0.90 (10% danych nad progiem). ''Dofitujemy'' do nadwyzek rozklad GPD.
+
+set.seed(10)
+
+X=rnorm(1000)       #generujemy probe z rozkladu normalnego N(0,1)
+u=quantile(X,0.90)  #wybieramy prog na poziomie kwantyla 90%
+u
+
+```
+
+```{r}
+#Wygebnerujemy probe z rozkladu normalnego o licznosci n=1000
+# i przeanalizujemy nadwyzki nad prog u, ustalony jako kwantyl rzedu
+#q=0.90 (10% danych nad progiem). ''Dofitujemy'' do nadwyzek rozklad GPD.
+
+set.seed(10)
+
+library(evir)
+data("danish")
+
+X <- danish  #Dane do zadań
+
+u1=quantile(danish,0.20)  #wybieramy prog na poziomie kwantyla 90%
+u2=quantile(danish,0.95)
+u1
+u2
+
+```
+
+
+```{r}
+
+#wykresy rozrzutu z zaznaczonym progiem u 
+plot(X)
+abline(h=u,lwd=3,col='red')   
+
+#nadwyzki nad prog u
+Y=X[X>u]-u
+plot(Y,type='h')
+
+```
+
+```{r}
+
+#pierwszy prog to kwantyl i drugi tez u1 u2
+
+#wykresy rozrzutu z zaznaczonym progiem u 
+plot(danish)
+abline(h=u2,lwd=3,col='red')   
+
+#nadwyzki nad prog u
+Y=danish[danish>u1]-u2
+plot(Y,type='h')
+
+```
+
+```{r}
+#estymujemy parametry rozkladu GPD
+#gpd(dane,u) - podajemy prog lub liczbe nadwyzek
+fitGPD=ismev::gpd.fit(X,u)   #u=kwantyl 90%, 
+#można podać liczbę nadwyżek, tutaj 0.10*length(X)
+
+#wyestymowane parametry rozkladu GPD
+xi=fitGPD$mle[[2]]
+beta=fitGPD$mle[[1]]
+
+```
+
+```{r}
+#estymujemy parametry rozkladu GPD
+#gpd(dane,u) - podajemy prog lub liczbe nadwyzek
+fitGPD=ismev::gpd.fit(danish,u2)   #u=kwantyl 95%, 
+#można podać liczbę nadwyżek, tutaj 0.10*length(X)
+
+#wyestymowane parametry rozkladu GPD
+xi=fitGPD$mle[[2]]
+beta=fitGPD$mle[[1]]
+
+```
+
+```{r}
+
+#dobroc dopasowania  na wykresach 
+hist(Y,prob=TRUE)                                    #histogram nadwyżek
+curve(evir::dgpd(x,xi,0,beta),col='red',lwd=2,add=T) #gęstość rozkładu GPD
+
+qqplot(Y,evir::qgpd(ppoints(1000),xi,0,beta))   #QQ-ploty
+qqline(Y,distribution=function(x) evir::qgpd(x,xi,0,beta),
+       prob=c(0.25,0.75), col=2)
+
+```
+
+```{r}
+
+#dobroc dopasowania  na wykresach 
+ismev::gpd.diag(fitGPD)
+
+```
+
+```{r}
+
+#lub korzystamy z funkcji 
+ismev::gpd.diag(fitGPD)
+
+```
+
+#Przykład 2. Estymacja $\xi$ dla progów u od 2 do 3 - porównanie z MMB
+
+```{r}
+#proba licznosci 1000 z rozkladu N(0,1)
+set.seed(10)
+X=rnorm(10000)
+
+#estymujemy parametry GPD dla progow od 2 do 3, z krokiem 0.1
+xiGPD=c()
+j=0
+for (u in seq(2,3,by=0.01)){
+  fitGPD=evir::gpd(X,u)
+  j=j+1
+  xiGPD[j]=as.numeric(fitGPD$par.est[[1]])
+}
+
+par(mfrow=c(1,1))
+plot(seq(2,3,by=0.01),xiGPD, ylim=c(-0.5,0.5), type='l', 
+     xlab='prog u',ylab='xi')
+
+#dla porównania xi otrzymane metodą GEV dla bloków liczności 300
+fitGEV=evir::gev(X,30); xiGEV=fitGEV$par.ests[[1]]; xiGEV
+#dorysowujemy do istniejacego wykresu
+abline(h=xiGEV,col='red')
+abline(h=0,col="gray")
+```
+
+```{r}
+
+#estymujemy parametry GPD dla progow od u1(kwantyl 0,2) do u2(kwantyl 0,95), z krokiem 0.1
+xiGPD=c()
+j=0
+
+for (u in seq(u1,u2,by=0.01)){
+  fitGPD=evir::gpd(danish,u)
+  j=j+1
+  xiGPD[j]=as.numeric(fitGPD$par.est[[1]])
+}
+
+par(mfrow=c(1,1))
+
+plot(seq(u1,u2,by=0.01),xiGPD, type='l', 
+     xlab='prog u',ylab='xi')
+
+#dla porównania xi otrzymane metodą GEV dla bloków liczności 300
+fitGEV=evir::gev(danish,30); xiGEV=fitGEV$par.ests[[1]]; xiGEV
+#dorysowujemy do istniejacego wykresu
+abline(h=xiGEV,col='red')
+abline(h=0,col="gray")
+
+length(xiGPD)
+length(seq(u1,u2,by=0.01))
+```
+
+#Przykład 3.  Poziom zwrotu (return level)
+```{r}
+#X i Y z Przykładu 1
+set.seed(1000)
+X=rnorm(1000)  #generujemy probe z rozkładu N(0,1)
+u=quantile(X,0.90) 
+u
+
+fitGPD=gpd(X,u)
+xi=fitGPD$par.est[[1]]
+beta=fitGPD$par.est[[2]]
+xi; beta
+
+#Obliczamy poziom zwrotu x20 wpisujac wzor "z reki"
+Y=X[X>u]-u     #nadwyzki
+
+Nu=length(Y)   #licznosc nadwyzek
+N=length(X)    #licznosc probki
+
+k=20
+x20=u+((k*Nu/N)^xi-1)*beta/xi #jesli przyjmiemy, ze xi rozne od zera 
+x20Gumbel=u+beta*log(k*Nu/N)  #jesli zdecydujemy,  ze to jednak Gumbel
+x20; x20Gumbel
+
+
+```
+
+
+```{r}
+#lub w library(evir) mamy gotowa funkcje 
+riskmeasures(fitGPD,0.95)[2]
+
+```
+
+```{r}
+#Obliczamy poziom zwrotu x20 z library(evir) mamy gotowa funkcje 
+riskmeasures(fitGPD,0.95)[2]
+
+```
+#Przykład 4. Analiza wykresow $xi$ i $beta^*$.
+
+```{r}
+
+#Generujemy  proby z rozkladow  N(0,1), t(4)
+set.seed(1023)
+n=rnorm(1000)
+t=rt(1000,4,0)
+
+#obliczamy kwantyle 85% i 95% 
+qn=as.numeric(quantile(n,c(0.85,0.90,0.95)))
+qt=as.numeric(quantile(t,c(0.85,0.90,0.95)))
+round(qn,2); round(qt,2)
+
+#wykresy xi i beta^* dla progow z przedzialu: 
+#(kwantyl 85%,kwantyl 95%)
+ismev::gpd.fitrange(n, qn[3], qn[1])
+ismev::gpd.fitrange(t, qt[3], qt[1])
+
+#wybieramy prod wystarczajaco duzy i taki 
+#aby wartosci shape i modified scale byly stale
+
+```
+
+
+```{r}
+#obliczamy kwantyle 85% i 95% 
+qd=as.numeric(quantile(danish,c(0.85,0.90,0.95)))
+round(qd,2)
+
+#wykresy xi i beta^* dla progow z przedzialu: 
+#(kwantyl 85%,kwantyl 95%)
+ismev::gpd.fitrange(danish, qd[3], qd[1])
+
+#wybieramy prod wystarczajaco duzy i taki 
+#aby wartosci shape i modified scale byly stale
+
+```
+#Przykład 5. Srednia przekroczen progu e
+
+```{r}
+
+evir::meplot(n[n>1], omit=3)
+evir::meplot(t[t>2], omit=3)
+
+#to samo ale w bibliotece 'ismev' z przedziałami ufnosci
+ismev::mrl.plot(n, umin=1)
+ismev::mrl.plot(t,umin=1)
+
+#wybieramy prog wystarczajaco duzy i taki
+#aby wykres byl liniowy
+
+```
+
+
+```{r}
+
+evir::meplot(danish[danish>1], omit=3)
+
+#to samo ale w bibliotece 'ismev' z przedziałami ufnosci
+ismev::mrl.plot(danish, umin=1)
+
+#wybieramy prog wystarczajaco duzy i taki
+#aby wykres byl liniowy
+
+```

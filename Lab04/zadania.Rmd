@@ -99,5 +99,93 @@ curve(dt(x,10),type='l',
 X <- rnorm(3000,40,10)
 Y <- rt(3000,10)
 ```
+```{r}
+#==========
+#Zadanie 3.  
+#==========
+#Danae sa duze proby X i Y (ponizej), z rozkladow $N(40,10^2)$ i $t(10,37)$
+X <- rnorm(3000,40,10)
+Y <- rt(3000,10)
+
+#a) Interesuje nas rozklad maksimow z 30-elementowych blokow.
+#Zrob analize jak w Zadani 2 nie wyznaczajac wczesniej 
+#maksimow - korzystając tylko z mozliwosci funkcji gev()
+# z pakietu evir (?gev).
+
+#obejrzyjmy wyniki na histogramach
+par(mfrow=c(2,1))
+hist(X,prob=TRUE)
+hist(Y,prob=TRUE)
+
+library(evir)
+fitX=gev(X) 
+fitT=gev(Y)
+
+#b) Wyestymuj parametry GEV korzystajac tym razem z funkcji
+#gev.fit() w pakiecie ismev. Przeanalizuj dobroc dopasowania
+#korzystajac z wykresow diagnostycznych jakie 
+#daje funkca gev.diag()w tym pakiecie.
+
+#Podajemy maksima
+fit.X <- ismev::gev.fit(X)
+fit.Y <- ismev::gev.fit(Y)
+
+
+#Wykresy diagnostyczne 
+ismev::gev.diag(fit.X)
+ismev::gev.diag(fit.Y)
+
+```
+```{r}
+
+#============
+#Zadanie 4.
+#============
+#Dla danych z Zadania 2. wyznacz poziom zwrotu  20 i 50. 
+#Skorzystaj z funkcji rlevel.gev() w pakiecie evir.
+#Zinterpretuj uzyskane wyniki.
+
+X <- rnorm(3000,40,10)
+Y <- rt(3000,10)
+
+fit.X <- evir::gev(X, 300)
+fit.Y <- evir::gev(Y, 300)
+
+#Obejrzyjmy wyniki 
+fit.X
+fit.Y
+
+evir::rlevel.gev(fit.X, k.blocks = 20)
+evir::rlevel.gev(fit.Y, k.blocks = 20)
+
+evir::rlevel.gev(fit.X, k.blocks = 50)
+evir::rlevel.gev(fit.Y, k.blocks = 50)
+
+```
+```{r}
+#============
+#Zadanie 5. 
+#============
+#Dla wybranych przez siebie danych, przeprowadź powyzsze 
+#analizy dla maksimów miesiecznych i rocznych.
+#Wykorzystaj funkcie gevFit(), summary() i gevrlevelPlot()
+#z pakietu fExtremes.
+library(fExtremes)
+
+#Estymujemy parametry GEV
+fitt.danish <- fExtremes::gevFit(danish,300)
+
+#Obejrzyjmy wyniki
+fitt.danish
+
+#fitt.danish$par.ests
+
+#wykresy diagnostyczne - inny pomysl opisany nizej
+summary(fitt.danish)
+
+#gevrlevelPlot
+fExtremes::gevrlevelPlot(fitt.danish,20)
+
+```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
