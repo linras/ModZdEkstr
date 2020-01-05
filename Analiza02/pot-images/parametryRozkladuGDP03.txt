@@ -1,0 +1,26 @@
+#wyestymowane parametry rozkladu GPD
+xi=fitGPD$mle[[2]]
+beta=fitGPD$mle[[1]]
+
+```
+$threshold
+ 90% 
+3.29 
+
+$nexc
+[1] 2894
+
+$conv
+[1] 0
+
+$nllh
+[1] 1661.926
+
+$mle
+[1]  0.7715406 -0.1663637
+
+$rate
+[1] 0.09927959
+
+$se
+[1] 0.01771566 0.01382912

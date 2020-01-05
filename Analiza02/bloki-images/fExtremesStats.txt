@@ -1,0 +1,26 @@
+
+Title:
+ GEV Parameter Estimation 
+
+Call:
+ fExtremes::gevFit(x = data, block = 20)
+
+Estimation Type:
+  gev mle 
+
+Estimated Parameters:
+        xi         mu       beta 
+0.08664822 2.01954724 0.77931166 
+
+Standard Deviations:
+         xi         mu       beta 
+0.02415405 0.02372757 0.01814201 
+
+Log-Likelihood Value:
+  2014.395 
+
+Type of Convergence:
+  0 
+
+Description
+  Sun Jan 05 15:11:51 2020 

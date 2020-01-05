@@ -1,0 +1,251 @@
+---
+title: "bloki"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE}
+library(fitdistrplus)
+library(tidyverse)
+
+library(evir)
+library(ismev)
+library(fExtremes)
+
+library(ggplot2)
+library(reshape2)
+library(ggrepel)
+
+```
+
+#Wczytanie danych (maksymalnych dlugosci fal)
+
+```{r}
+
+# set working directory
+path_loc <- "C:/repo/ModZdEkstr/Analiza02"
+setwd(path_loc)
+# reading in the data
+df <- read_csv("waves20months.csv") ; df
+
+# taking a quick look
+glimpse(df)
+
+# retype to numeric
+df$Hmax <- as.numeric(df$Hmax)
+
+data <- df$Hmax
+
+```
+
+
+#Analiza maksimów
+```{r}
+
+
+#Narysujmy gestosci rozkladow z ktorych bedziemy generowali probki.
+plot(function(x) dnorm(x),-4,4,
+     ylim=c(0,0.41),
+     type='l',lwd='2',col='blue',
+     xlab=NA,ylab=NA)
+curve(dunif(x,-2,2),-2,2,
+      type='l',lwd='2',col='green', 
+      add=T)
+curve(dt(x,4,0),type='l',
+      lwd='2',col='red', 
+      add=T)
+
+```
+
+```{r}
+#100 prob licznosci 300
+m <- 100
+n <- 300
+a <- -2         #parametry rozkładu jednostajnego
+b <- 2
+df <- 4          #parametr rozkladu t-Studenta
+
+#maksima
+Mu <- replicate(m, max(runif(n,a,b)))
+Mn <- replicate(m, max(rnorm(n)))
+Mt <- replicate(m, max(rt(n,df,0)))
+
+Mu=as.numeric(Mu)
+Mn=as.numeric(Mn)
+Mt=as.numeric(Mt)
+
+#wyniki na histogramach
+hist(Mu,prob=TRUE)
+hist(Mn,prob=TRUE)
+hist(Mt,prob=TRUE)
+hist(data, prob=TRUE)
+
+
+```
+
+#Estymacja parametrów rozkładu GEV -- library(evir)
+
+
+```{r}
+
+#Uzyjemy funkcji 'gev' z  library(evir).
+fitu=gev(Mu) #xi=-1 (SColes p.52), dla tych rozkładow znamy wartosci wspołczynnika xi 
+fitn=gev(Mn) #xi=0 (SColes p.52)
+fitt=gev(Mt)  #xi=0.25 (odwrotnosc stopni swobody 1/4)
+#######################################################################
+fitData=gevFit(data, type="pwm")
+fitData #wyestymowane parametry
+#######################################################################
+para <- gevFit(data, type = "pwm")
+para
+#Wyestymowane parametry (xi,sigma,mu).
+
+paru=c(fitu$par.ests[[1]],fitu$par.ests[[2]],fitu$par.ests[[3]])
+parn=c(fitn$par.ests[[1]],fitn$par.ests[[2]],fitn$par.ests[[3]])
+part=c(fitt$par.ests[[1]],fitt$par.ests[[2]],fitt$par.ests[[3]])
+paru; parn; part
+
+#Histogramy i  dopasowane gestosci GEV 
+#podajemy parametry w kolejnosci (xi,mu,sigma)!
+hist(Mu,prob=TRUE)
+curve(dgev(x,paru[1],paru[3],paru[2]),add=T)
+hist(Mn,prob=TRUE)
+curve(dgev(x,parn[1],parn[3],parn[2]),add=T)
+hist(Mt,prob=TRUE)
+curve(dgev(x,part[1],part[3],part[2]),add=T)
+
+#Dystrybuanty empiryczne i dopasowane 
+#podajemy parametry w kolejnosci (xi,mu,sigma)!
+plot(ecdf(Mu))
+curve(pgev(x,paru[1],paru[3],paru[2]),add=T,col=2)
+plot(ecdf(Mn))
+curve(pgev(x,parn[1],parn[3],parn[2]),add=T,col=2)
+plot(ecdf(Mt))
+curve(pgev(x,part[1],part[3],part[2]),add=T,col=2)
+
+```
+
+
+#Estymacja parametrów rozkładu GEV -- library(ismev) plus wykresy diagnostyczne.
+
+
+```{r}
+#Podajemy maksima
+fit.n <- ismev::gev.fit(Mn)
+fit.t <- ismev::gev.fit(Mt)
+
+fit <- ismev::gev.fit(data)
+ismev::gev.diag(fitData)
+
+#Wykresy diagnostyczne 
+ismev::gev.diag(fit.n)
+ismev::gev.diag(fit.t)
+
+```
+
+
+#Estymacja parametrów rozkładu GEV -- bez wczesniejszego wyznaczania maksimów. 
+
+Analiza maksimów z rozkładu normalnego i t-Studenta w pakietach evir oraz ismev.
+
+```{r  }
+
+#Generujemy dwie proby, jedna z rozkladu N(01), druga z t-Studenta t(4) licznosci: 30000.
+#To jest "datastor" do dalszej analizy.
+set.seed(10)
+X <- rnorm(30000)
+Y <- rt(30000,4)
+
+fit.X <- evir::gev(X, 300)
+fit.Y <- evir::gev(Y, 300)
+
+#Obejrzyjmy wyniki 
+fit.X
+fit.Y
+
+#fit.X$par.ests - wyestymowane parametry
+#fit.Y$par.ests
+
+Mn <- fit.X$data  #maksima z blokow, mozna uzyc do rysowania wykresow diagnostycznych
+Mt <- fit.Y$data  #wiecej informacji: ?gev 
+
+
+#Okrezna droga dojdziemy do wykresow diagnostycznych w pakiecie ismev
+fit.n <- ismev::gev.fit(Mn)
+fit.t <- ismev::gev.fit(Mt)
+
+#Wykresy diagnostyczne 
+ismev::gev.diag(fit.n)
+ismev::gev.diag(fit.t)
+
+  
+```
+
+#Ta sama analiza w pakiecie fExtremes
+
+
+```{r out.width = '47%'}
+#Estymujemy parametry GEV
+fitt.X <- fExtremes::gevFit(X,300)
+fitt.Y <- fExtremes::gevFit(Y,300)
+
+#Obejrzyjmy wyniki
+fitt.X
+fitt.Y
+
+#fitt.X$par.ests - wyestymowane parametry, podobnie jak w gev
+#fitt.Y$par.ests
+
+#wykresy diagnostyczne - inny pomysl opisany nizej
+summary(fitt.X)
+summary(fitt.Y)
+```
+
+
+Fakt. Jeśli zmienna losowa $X$ ma rozkład $GEV(\mu,\sigma,\xi)$, to zmienna $f(Y)$ ma rozkład wykładniczy $\mbox{Exp}(1)$, gdzie $f$ jest funkcą która zależy od parametrów $\mu, \sigma, \beta$.
+
+Powyższy fakt wykorzystuje się do tworzenia wykresów diagnostycznych w oparciu o przekształconą  próbkę danych. Załóżmy, że na podstawie maksimów $m_1, m_2, \ldots, m_k$
+wyestymowaliśmy parametry rozkładu $GEV(\mu,\sigma,\xi)$. Przekształcamy wejściowe dane 
+$$f(m_1), f(m_2), \ldots, f(m_k)$$
+i konfrontujemy je na wykresach diagnostycznych z rozkładem wykładniczym z parametrem 1 (w pakiecie \texttt{fExtremes} mamy wykresy diagnostyczne właśnie dla przekształconej próby).
+
+
+#Poziom zwrotu (return level) -- kwantyl rzędu $p=1-1/k$.
+Przykładowo dla $k=20$, średnio raz na 20 "bloków" (miesięcy, lat -- w zależności od tego z jakiego okresu są maksima) możemy oczekiwać wartości równych wyestymowanemu kwantylowi lub większych. W poniższej analizie średnio raz na 20 300-elementowych bloków możemy oczekiwać wartości
+\begin{itemize}
+\item 3.70 i wiecej,
+\item 10.37 i wiecej.
+\end{itemize}
+Gdyby utożsamiać bloki 300-elementowe z latami, to średnio raz na 20 lat będziemy oglądali zjawiska ekstremalne o takiej intensywności.
+
+#W pakiecie \texttt{evir}. 
+
+```{r}
+#Srodkowa z trzech warosci (zewnetrzne to konce przedzialu ufnosci)
+evir::rlevel.gev(fit.X, k.blocks = 20)
+evir::rlevel.gev(fit.Y, k.blocks = 20)
+
+
+```
+
+#To samo w pakiecie \texttt{fExtremes}.
+```{r}
+
+
+#dorysowujemy do istniejacego wykresu
+abline(h=xiGEV,col='red')
+abline(h=0,col="gray")
+
+fExtremes::gevrlevelPlot(fitt.X,20)
+
+fExtremes::gevrlevelPlot(fitt.Y,20)
+
+```
+
+
+
+
+
