@@ -1,4 +1,4 @@
----
+﻿---
 title: "analiza02"
 output: pdf_document
 author: "Antonina Brzeska"
@@ -117,49 +117,4 @@ fitt.X <- fExtremes::gevFit(data,20)
 summary(fitt.X)
 
 ```
-```{r}
-fExtremes::gevrlevelPlot(fitt.X,20)
-evir::rlevel.gev(fitGEV, k.blocks = 20)
-```
-Rozszerzenie z laboratoriów 7:
-```{r}
-#Proba z rozkladu wykładniczego
-#X=rexp(10,2)
-round(X,2)
 
-#srednia, odchylenie standardowe
-Me=median(X); Me
-
-#generujemy 10000 prob bootstrapowych i obliczamy roznice srednich
-Db=c()
-for(i in 1:10000){
-  Y=sample(X,10,replace=TRUE)
-  Db[i]=median(Y)- Me
-}
-
-
-#kwantyle z rozkladu zmiennej Db
-alpha <- 1-0.95
-alpha1 <- alpha/2
-alpha2 <- 1-alpha/2
-
-q1 <- quantile(Db,alpha1)
-q2 <- quantile(Db,alpha2)
-
-#rozklad na wykresach
-hist(Db,prob=T)
-abline(v=q1, col=2)
-abline(v=q2, col=2)
-
-#przedial ufnosci na poziomie ufnosci 95%
-CI <- c(Me-q2,Me-q1)
-CI
-
-#Czy rzeczywista mediana nalezy do przedzialu?
-#mediana zmiennej o rozkladzieu Exp(lambda): log(2)/lambda
-
-#log(2)/2
-
-
-
-```

@@ -31,13 +31,11 @@
 \centerline{ Antonina Brzeska 246824}
 \bigskip
 
-\\{\bf 1. Krótki opis wybranych danych. } Zestaw danych opisuje maksymalne zanotowane wysokoœci fal na wybrze¿u Australijskim w  miejscowoœci Mooloolaba. Wybrane pomiary mierzono w okresie 20 miesiêcy pocz¹wszy od stycznia 2017 roku.
+\\{\bf 1. Krótki opis wybranych danych. } Zestaw danych opisuje zanotowane wysokoœci fal na wybrze¿u Australijskim w  miejscowoœci Mooloolaba. Wybrane pomiary zawieraj¹ 29108 rekordów, z czego mierzono je w okresie 20 miesiêcy pocz¹wszy od stycznia 2017 roku. W ka¿dym miesi¹cu pobrano podobn¹ iloœæ danych, dlatego mo¿na za³o¿yæ, ¿e analizowane dalej bloki przypisane s¹ do kolejnych miesiêcy.
 
 \bigskip
-\bigskip
-\bigskip
 
-\\{\bf 2. Analiza metod¹ maksimów blokowych (BMM).} Wyestymowano parametry rozk³adu GEV w oparciu o maksima z ustalonych bloków 20-stu miesiêcy:
+\\{\bf 2. Analiza metod¹ maksimów blokowych (BMM).} Wyestymowano parametry rozk³adu GEV w oparciu o maksima z ustalonych bloków miesiêcznych:
 \bigskip
 
 $$\begin {array} {|c|c|c|c|}
@@ -55,13 +53,13 @@ $$\begin {array} {|c|c|c|c|}
 
 \noindent 
 \begin{itemize}
-	\item Histogram:
+	\item Dobroæ dopasowania na histogramie:
 \end{itemize}
 \centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/histogram}}
 \bigskip
 \bigskip
 \begin{itemize}
-	\item Bloki maksimów:
+	\item Wykres maksimów blokowych:
 \end{itemize}
 \centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/blockMaxima}}
 
@@ -69,14 +67,14 @@ $$\begin {array} {|c|c|c|c|}
 \bigskip
 
 \begin{itemize}
-	\item QQ-plot:
+	\item Wykres kwantyli dopasowanego rozk³adu:
 \end{itemize}
 \centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/QQplotOfResiduals}}
 
 \bigskip
 
 \begin{itemize}
-	\item Scatterplot:
+	\item Wykres punktowy:
 \end{itemize}
 \centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/scatterplot}}
 
@@ -155,14 +153,14 @@ $$\begin{tabular}{|c|c|c|}
 \bigskip
 
 \begin{itemize}
-	\item Dobroæ dopasowania QQ-plot:
+	\item Wykres kwantyli dopasowanego rozk³adu:
 \end{itemize}
 \centerline{\includegraphics[width=16cm, height=10cm]{pot-images/dobrocDopasowaniaQqplot05}}
 \bigskip
 \bigskip
 
 \begin{itemize}
-	\item Dobroæ dopasowania na wykresach z pakietu ismev:
+	\item Dobroæ dopasowania na wykresach z pakietu ismev, kolejno: Wykres prawdopodobieñstwa empirycznego, kwantyli dopasowanego rozk³adu, wykres z punktami poziomu zwrotu oraz histogram z zaznaczon¹ gêstoœci¹.
 \end{itemize}
 \centerline{\includegraphics[width=16cm, height=10cm]{pot-images/dobrocDopasowaniaIsmev06}}
 
@@ -178,8 +176,6 @@ $$\begin{tabular}{|c|c|}
 \multicolumn{2}{|c|}{Poziomu zwrotu $x_{20}$} \\ 
 \hline 
 \mbox{$xi$ ró¿ne od zera} & 3.790135  \\ 
-\hline 
-\mbox{Gumbel} & 3.819213 \\ 
 \hline 
 \end{tabular} $$
 
