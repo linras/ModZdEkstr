@@ -1,0 +1,144 @@
+\documentclass[12pt]{report}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage[polish]{babel}
+\usepackage[cp1250]{inputenc}
+\usepackage{t1enc}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{color}
+
+\textwidth=15cm \textheight=24cm \oddsidemargin=0.5cm
+\topmargin=-0.5cm
+\textwidth=15cm \textheight=24cm \oddsidemargin=0.5cm
+\topmargin=-2cm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator{\R}{\mathbb{R}}
+\def\\{\hfill\break}
+\def\1{{\mathbf 1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\centerline{\large Analiza 1}
+\bigskip
+\centerline{\large Estymacja parametrów rozk³adu  na podstawie danej próby}
+\bigskip
+
+\centerline{ Antonina Brzeska 246824}
+\bigskip
+
+\\{\bf 1. Krótki opis wybranych danych. } Pierwszy zestaw zawiera spis wagi i wysokoœci oraz p³eæ osoby. Wykonane by³y w 2017 roku. Zestaw zosta³ przefiltrowany, do badania wziêto 200 rekordów wag i przeliczono jednostkê na kilogramy. Drugi zestaw obrazuje iloœæ pasa¿erów linii lotniczej w latach 1949 - 1960.
+
+\\{\bf 2. Wstêpna analiza danych.}
+
+$$\begin {array} {|c|c|c|c|c|}
+\hline
+      & \overline x& \mbox{odch. st.}& \mbox{skoœnoœæ}& \mbox{kurtoza}\\
+\hline              
+\mbox{Wagi}&  73.55& 15.41&  0.22&  2.09\\
+\hline             
+\mbox{Pasa¿erowie}&  280& 120&  0.58&  2.6\\
+\hline
+\end{array}$$
+
+\centerline {Wykres skoœnoœæ-kurtoza dla wag (po lewej) oraz pasa¿erów (po prawej):}
+
+\centerline{\includegraphics[width=7cm, height=3cm]{Analiza/skosnosc_kurtoza}
+\includegraphics[width=7cm, height=3cm]{Analiza/pass_skosnosc_kurtoza}}
+
+\\{\bf 3. Estymacja parametrów wybranych rozk³adów -- analiza wstêpna.}
+
+\centerline {Wykresy diagnostyczne dla rozk³adu ci¹g³ego (wagi):}
+
+\centerline{\includegraphics[width=16cm, height=9cm]{Analiza/wykresy_diagnostyczne}}
+''Go³ym okiem'' ciê¿ko dostrzec znacz¹c¹ ró¿nicê, jednak rozk³ad gamma wydaje siê najdok³adniejszy.
+
+
+
+\centerline {Wykresy diagnostyczne dla rozk³adu dyskretnego (pasa¿erowie):}
+
+
+\bigskip
+\bigskip
+\bigskip
+
+\centerline{\includegraphics[width=16cm, height=10cm]{Analiza/pass_diagnostyczne}}
+
+Z obserwacji widaæ, ¿e rozk³ad dwumianowy uzyska³ lepsz¹ dok³adnoœæ.
+
+\begin{minipage}[c]{14cm}
+%\includegraphics[width=14cm]{wykresy.png}
+\end{minipage}
+\bigskip
+\bigskip
+
+\\{\bf 4. Analiza pog³êbiona.} Po obliczeniu kryteriów AIC oraz BIC mo¿na zauwa¿yæ, ¿e dla rozk³adu ci¹g³ego najlepszy okazuje siê rozk³ad gamma. Dla rozk³adu dyskretnego ró¿nica jest oczywista i tu rozk³ad dwumianowy uzyskuje znacznie lepsz¹ dok³adnoœæ.
+
+
+\bigskip
+\bigskip
+
+\centerline {Kryteria rozk³adu ci¹g³ego (wagi):}
+
+$$\begin {array} {|c|c|c|c|}
+\hline
+& \mbox{Weibull}& \mbox{log-normal}& \mbox{gamma}\\
+\hline              
+\mbox{AIC}&  1670.183& 1660.335 & 1659.826\\
+\hline             
+\mbox{BIC}&  1676.78& 1666.932 &1666.423  \\
+\hline
+\end{array}$$
+
+
+\bigskip
+\bigskip
+
+\centerline {Kryteria rozk³adu dyskretnego (pasa¿erowie):}
+
+$$\begin {array} {|c|c|c|}
+\hline
+& \mbox{Rozk³ad Poissona}& \mbox{Dwumianowy}\\
+\hline              
+\mbox{AIC}&  8281.635& 1772.221\\
+\hline             
+\mbox{BIC}&  8284.605 & 1778.16 \\
+\hline
+\end{array}$$
+
+
+\bigskip
+\bigskip
+\bigskip
+
+\\{\bf 5. Zdarzenia rzadkie.} Analizuj¹c obliczone kwantyle mo¿na zauwa¿yæ, ¿e ma³o prawdopodobne jest wylosowanie osoby wa¿¹cej 100 kg oraz rzadkoœci¹ by³o przekroczenie miesiêcznej iloœci pasa¿erów liczb¹ powy¿ej 500.
+
+$$\begin {array} {|c|c|c|}
+\hline
+& \mbox{Wagi}& \mbox{Pasa¿erowie}\\
+\hline              
+\mbox{kwantyle rzêdu 0.95}&  96.39& 488\\
+\hline             
+\mbox{kwantyle rzêdu 0.98}&  104.82 & 550 \\
+\hline
+\end{array}$$
+
+
+\bigskip
+\bigskip
+\bigskip
+
+\noindent{\bf ród³a danych:} 
+
+
+\noindent 
+\begin{itemize}
+	\item https://www.kaggle.com/mustafaali96/weight-height
+	\item https://www.kaggle.com/rakannimer/air-passengers
+\end{itemize}
+
+\end{document}

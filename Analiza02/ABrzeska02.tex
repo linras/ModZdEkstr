@@ -1,0 +1,206 @@
+\documentclass[12pt]{report}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage[polish]{babel}
+\usepackage[cp1250]{inputenc}
+\usepackage{t1enc}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{color}
+
+\textwidth=15cm \textheight=24cm \oddsidemargin=0.5cm
+\topmargin=-0.5cm
+\textwidth=15cm \textheight=24cm \oddsidemargin=0.5cm
+\topmargin=-2cm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator{\R}{\mathbb{R}}
+\def\\{\hfill\break}
+\def\1{{\mathbf 1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\centerline{\large Analiza 2}
+\bigskip
+\centerline{\large Analiza zdarzeÒ ekstremalnych}
+\bigskip
+
+\centerline{ Antonina Brzeska 246824}
+\bigskip
+
+\\{\bf 1. KrÛtki opis wybranych danych. } Zestaw danych opisuje maksymalne zanotowane wysokoúci fal na wybrzeøu Australijskim w  miejscowoúci Mooloolaba. Wybrane pomiary mierzono w okresie 20 miesiÍcy poczπwszy od stycznia 2017 roku.
+
+\bigskip
+\bigskip
+\bigskip
+
+\\{\bf 2. Analiza metodπ maksimÛw blokowych (BMM).} Wyestymowano parametry rozk≥adu GEV w oparciu o maksima z ustalonych blokÛw 20-stu miesiÍcy:
+\bigskip
+
+$$\begin {array} {|c|c|c|c|}
+\hline
+      \ & \mbox{xi} & \mbox{sigma}& \mbox{mu} \\
+\hline              
+\mbox{Parametry rozk≥adu GEV}&  0.08649017 & 0.77932777 &  2.01939634\\
+\hline
+\end{array}$$
+
+\bigskip
+\bigskip
+
+\noindent{ Przeprowadzono analizÍ oceniajπcπ dobroÊ dopasowania za pomocπ nastÍpujπcych wykresÛw diagnostycznych:} 
+
+\noindent 
+\begin{itemize}
+	\item Histogram:
+\end{itemize}
+\centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/histogram}}
+\bigskip
+\bigskip
+\begin{itemize}
+	\item Bloki maksimÛw:
+\end{itemize}
+\centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/blockMaxima}}
+
+\bigskip
+\bigskip
+
+\begin{itemize}
+	\item QQ-plot:
+\end{itemize}
+\centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/QQplotOfResiduals}}
+
+\bigskip
+
+\begin{itemize}
+	\item Scatterplot:
+\end{itemize}
+\centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/scatterplot}}
+
+
+
+\centerline {\bf Wyznaczono poziomy zwrotu $x_{20}$:}
+
+$$\begin{tabular}{|c|c|c|}
+	\hline 
+	\multicolumn{3}{|c|}{Poziomu zwrotu $x_{20}$} \\ 
+	\hline 
+	4.495955 & 4.658657 & 4.920852 \\ 
+	\hline 
+\end{tabular} $$
+
+\centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/poziomZwrotuX20}}
+
+Powyøej wykres z punktami poziomu zwrotu.
+
+\begin{minipage}[c]{14cm}
+%\includegraphics[width=14cm]{wykresy.png}
+\end{minipage}
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+
+\\{\bf 3. Analiza metodπ przekroczeÒ progu (POT).} Kwantyl 90\% $u=3.29$ co oznacza, øe 10\% mierzonych fal przekracza≥o wysokoúÊ 3.29 m.  Ustalono prÛg na tym poziomie i wyestymowano parametry rozk≥adu GPD dla nadwyøek nad ten prÛg:
+
+
+$$\begin{tabular}{|c|c|c|}
+\hline 
+\multicolumn{3}{|c|}{Parametry rozk≥adu GPD} \\ 
+\hline 
+\$nexc & \multicolumn{2}{|c|}{2894} \\ 
+\hline 
+\$nllh & \multicolumn{2}{|c|}{1661.926}  \\ 
+\hline 
+\$mle & 0.7715406 & -0.1663637 \\ 
+\hline 
+\$rate & \multicolumn{2}{|c|}{0.09927959} \\ 
+\hline 
+\$se & 0.01771566 & 0.01382912 \\ 
+\hline 
+\end{tabular} $$
+
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+
+\noindent{ Przeprowadzono analizÍ oceniajπcπ dobroÊ dopasowania za pomocπ nastÍpujπcych wykresÛw diagnostycznych:} 
+
+
+\noindent 
+\begin{itemize}
+	\item Wykres rozrzutu z zaznaczonym progiem:
+\end{itemize}
+	\centerline{\includegraphics[width=16cm, height=10cm]{pot-images/wykresyRozrzutuZZaznaczonymProgiem01}}
+\bigskip
+\bigskip
+
+\begin{itemize}
+	\item Wykres nadwyøek nad prÛg 90\%:
+\end{itemize}
+\centerline{\includegraphics[width=16cm, height=10cm]{pot-images/nadwyzkiNadProg90procent02}}
+\bigskip
+\bigskip
+
+\begin{itemize}
+	\item DobroÊ dopasowania na histogramie:
+\end{itemize}
+\centerline{\includegraphics[width=16cm, height=10cm]{pot-images/dobrocDopasowaniaHistogram04}}
+\bigskip
+
+\begin{itemize}
+	\item DobroÊ dopasowania QQ-plot:
+\end{itemize}
+\centerline{\includegraphics[width=16cm, height=10cm]{pot-images/dobrocDopasowaniaQqplot05}}
+\bigskip
+\bigskip
+
+\begin{itemize}
+	\item DobroÊ dopasowania na wykresach z pakietu ismev:
+\end{itemize}
+\centerline{\includegraphics[width=16cm, height=10cm]{pot-images/dobrocDopasowaniaIsmev06}}
+
+\bigskip
+\bigskip
+\bigskip
+
+\centerline {\bf Wyznaczono poziom zwrotu $x_{20}$:}
+
+
+$$\begin{tabular}{|c|c|}
+\hline 
+\multicolumn{2}{|c|}{Poziomu zwrotu $x_{20}$} \\ 
+\hline 
+\mbox{$xi$ rÛøne od zera} & 3.790135  \\ 
+\hline 
+\mbox{Gumbel} & 3.819213 \\ 
+\hline 
+\end{tabular} $$
+
+
+\bigskip
+\bigskip
+\bigskip
+
+\\{\bf 4. Podsumowanie.} Analizujπc powyøsze wykresy oraz obliczenia moøna zauwaøyÊ, øe analiza metodπ maksimÛw blokowych osiπga wiÍkszy poziom zwrotu niø druga metoda. Moøliwym powodem tego moøe byÊ niew≥aúciwie ustalony prÛg przy metodzie przekroczeÒ progu.
+
+
+\bigskip
+\bigskip
+\bigskip
+
+
+\noindent{\bf èrÛd≥a danych:} 
+
+\noindent 
+\begin{itemize}
+	\item https://www.kaggle.com/jolasa/waves-measuring-buoys-data-mooloolaba
+\end{itemize}
+
+\end{document}
