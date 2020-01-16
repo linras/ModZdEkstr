@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(evir)
 library(ismev)
 library(ggplot2)
+library(tidyverse)
 ```
 
 
@@ -23,7 +24,7 @@ library(ggplot2)
 path_loc <- "C:/repo/ModZdEkstr/Analiza02"
 setwd(path_loc)
 # reading in the data
-df <- read_csv("waves20months.csv") ; df
+df <- read_csv("waves20months-ok.csv") ; df
 
 # taking a quick look
 glimpse(df)
@@ -44,7 +45,7 @@ plot(data)
 abline(h=u,lwd=3,col='red')   
 
 #nadwyzki nad prog u
-Y=data[data>u]-u
+Y=data[data>u]
 plot(Y,type='h')
 
 ```
@@ -99,14 +100,14 @@ muGEV=fitGEV$par.ests[[3]]; muGEV
 #fitGEV
 ```
 ```{r}
-hist(data,prob=TRUE, xlim=c(-3,7), ylim =c(0,0.3))
-curve(dgev(x,xiGEV,sigmaGEV,muGEV),add=T)
+#hist(data,prob=TRUE, xlim=c(-3,7), ylim =c(0,0.3))
+#curve(dgev(x,xiGEV,sigmaGEV,muGEV),add=T)
 ```
 ```{r}
 #Dystrybuanty empiryczne i dopasowane 
 #podajemy parametry w kolejnosci (xi,mu,sigma)!
-plot(ecdf(data))
-curve(pgev(x,xiGEV,sigmaGEV,muGEV),add=T,col=2)
+#plot(ecdf(data))
+#curve(pgev(x,xiGEV,sigmaGEV,muGEV),add=T,col=2)
 ```
 ```{r}
 #Wykresy diagnostyczne 
