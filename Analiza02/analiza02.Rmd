@@ -21,37 +21,66 @@ library(tidyverse)
 
 ```{r}
 
-# set working directory
+#WCZYTYWANIE DANYCH
 #path_loc <- "C:/repo/ModZdEkstr/Analiza02"
 path_loc <- "H:/Repo/ModZdEkstr/Analiza02"
 setwd(path_loc)
-# reading in the data
+
 df <- read_csv("waves20months-ok.csv") ; df
 
-# taking a quick look
+#PODGLĄD DANYCH
 glimpse(df)
 
-# retype to numeric
+#UPEWNIENIE, ŻE DANE SĄ TYPU NUMERYCZNEGO
 df$Hmax <- as.numeric(df$Hmax)
 
+#WCZYTANIE DANYCH Z KOLUMNY WYSOKOŚCI FAL
 data <- df$Hmax
 
+#KWANTYL 90%
+u=quantile(data,0.90); u # u = 3.29 
+
+```
+
+```{r}
+######################################################## METODA MAKSIMÓW BLOKOWYCH BMM
+
+#2. Analiza metodą maksimów blokowych (BMM). Wyestymowano parametry
+#rozkładu GEV w oparciu o maksima z ustalonych bloków 20-stu miesięcy:
+
+fitGEV=evir::gev(data,30*47); 
+fitGEV$par.ests #- wyestymowane parametry xi sigma mu
+xiGEV=fitGEV$par.ests[[1]]; xiGEV
+sigmaGEV=fitGEV$par.ests[[2]]; sigmaGEV
+muGEV=fitGEV$par.ests[[3]]; muGEV
+
+#xi      sigma         mu 
+#-0.3372591  1.0874319  4.5626598
+#fitGEV
+```
+
+
+```{r}
+#Przeprowadzono analizę oceniającą dobroć dopasowania za pomocą następujących
+#wykresów diagnostycznych (METODA MAKSIMÓW BLOKOWYCH BMM):
+
+fitt.X <- fExtremes::gevFit(data,20)
+summary(fitt.X)
+
+```
+
+```{r}
+#POZIOM ZWROTU k20 METODĄ MAKSIMÓW BLOKOWYCH
+fExtremes::gevrlevelPlot(fitt.X,20)
+evir::rlevel.gev(fitGEV, k.blocks = 20) #6.602865
+
+```
+```{r}
+######################################################## METODA PRZEKROCZEŃ PROGU POT
+#3. Analiza metodą przekroczeń progu (POT)
+
+#KWANTYL 90%
 u=quantile(data,0.90); u
-
-```
-
-```{r}
-
-#wykresy rozrzutu z zaznaczonym progiem u 
-plot(data)
-abline(h=u,lwd=3,col='red')   
-
-#nadwyzki nad prog u
-Y=data[data>u]
-plot(Y,type='h')
-
-```
-```{r}
 
 #estymujemy parametry rozkladu GPD
 #gpd(dane,u) - podajemy prog lub liczbe nadwyzek
@@ -59,13 +88,47 @@ fitGPD=ismev::gpd.fit(data,u)   #u=kwantyl 90%,
 #można podać liczbę nadwyżek, tutaj 0.10*length(data)
 
 #wyestymowane parametry rozkladu GPD
-xi=fitGPD$mle[[2]]
-beta=fitGPD$mle[[1]]
+xi=fitGPD$mle[[2]]; xi
+beta=fitGPD$mle[[1]]; beta
+rate=fitGPD$rate; rate
+
+#[1] -0.1663637 xi
+#[1] 0.7715406 beta
+#[1] 0.09942625 rate
 
 ```
-```{r}
 
-#dobroc dopasowania  na wykresach 
+```{r}
+######################################################## METODA PRZEKROCZEŃ PROGU POT
+#wykresy ROZRZUTU z zaznaczonym progiem u=kwantyl 90%
+plot(data)
+abline(h=u,lwd=3,col='red')   
+
+#oraz wykres nadwyzek nad prog u=kwantyl 90%
+Y=data[data>u]
+plot(Y,type='h')
+
+```
+
+```{r}
+######################################################## METODA PRZEKROCZEŃ PROGU POT
+#dobroć dopasowania  na wykresach 
+ismev::gpd.diag(fitGPD)
+
+```
+
+```{r}
+# METODA POT PRZEKROCZEŃ PROGU
+Nu=length(Y)   #licznosc nadwyzek
+N=length(data)    #licznosc probki
+
+fitRm= gpd(data,u)
+k20 = 1-1/(20*30*47) #poziom zwrotu k20 30 dni w bloku i 47 rekordów /dzień
+riskmeasures(fitRm,k20)[2] #6.689767
+```
+
+```{r}
+#dodatkowe wykresy
 hist(Y,prob=TRUE)                                    #histogram nadwyżek
 curve(evir::dgpd(x,xi,0,beta),col='red',lwd=2,add=T) #gęstość rozkładu GPD
 
@@ -74,20 +137,7 @@ qqline(Y,distribution=function(x) evir::qgpd(x,xi,0,beta),
        prob=c(0.25,0.75), col=2)
 
 ```
-```{r}
 
-#dobroc dopasowania  na wykresach z pakietu ismev
-ismev::gpd.diag(fitGPD)
-```
-```{r}
-# METODA POT PRZEKROCZEŃ PROGU
-Nu=length(Y)   #licznosc nadwyzek
-N=length(data)    #licznosc probki
-
-fitRm= gpd(data,u)
-k20 = 1-1/(20*30*47) #poziom zwrotu k20 30 dni w bloku i 47 rekordów /dzień
-riskmeasures(fitRm,k20)[2]
-```
 ```{r}
 #k=20
 #x20=u+((k*Nu/N)^xi-1)*beta/xi #jesli przyjmiemy, ze xi rozne od zera 
@@ -96,16 +146,7 @@ riskmeasures(fitRm,k20)[2]
 
 ```
 
-```{r}
-##################################################################  BLOKI
 
-fitGEV=evir::gev(data,30*47); 
-fitGEV$par.ests #- wyestymowane parametry xi sigma mu
-xiGEV=fitGEV$par.ests[[1]]; xiGEV
-sigmaGEV=fitGEV$par.ests[[2]]; sigmaGEV
-muGEV=fitGEV$par.ests[[3]]; muGEV
-#fitGEV
-```
 ```{r}
 #hist(data,prob=TRUE, xlim=c(-3,7), ylim =c(0,0.3))
 #curve(dgev(x,xiGEV,sigmaGEV,muGEV),add=T)
@@ -116,17 +157,8 @@ muGEV=fitGEV$par.ests[[3]]; muGEV
 #plot(ecdf(data))
 #curve(pgev(x,xiGEV,sigmaGEV,muGEV),add=T,col=2)
 ```
-```{r}
-#Wykresy diagnostyczne 
-fitt.X <- fExtremes::gevFit(data,20)
-summary(fitt.X)
 
-```
-```{r}
-fExtremes::gevrlevelPlot(fitt.X,20)
-evir::rlevel.gev(fitGEV, k.blocks = 20)
 
-```
 Rozszerzenie z laboratoriów 7:
 ```{r}
 #Proba z rozkladu wykładniczego
