@@ -31,7 +31,7 @@
 \centerline{ Antonina Brzeska 246824}
 \bigskip
 
-\\{\bf 1. Krótki opis wybranych danych. } Zestaw danych opisuje zanotowane wysokoœci fal na wybrze¿u Australijskim w  miejscowoœci Mooloolaba. Wybrane pomiary zawieraj¹ 29108 rekordów, z czego mierzono je w okresie 20 miesiêcy pocz¹wszy od stycznia 2017 roku. W ka¿dym miesi¹cu pobrano podobn¹ iloœæ danych, dlatego mo¿na za³o¿yæ, ¿e analizowane dalej bloki przypisane s¹ do kolejnych miesiêcy.
+\\{\bf 1. Krótki opis wybranych danych. } Zestaw danych opisuje zanotowane wysokoœci fal na wybrze¿u Australijskim w  miejscowoœci Mooloolaba. Wybrane pomiary zawieraj¹ 29108 rekordów, z czego mierzono je w okresie 20 miesiêcy pocz¹wszy od stycznia 2017 roku. W ka¿dym miesi¹cu pobrano podobn¹ iloœæ danych (47 rekordów dziennie), dlatego mo¿na za³o¿yæ, ¿e analizowane dalej bloki odpowiadaj¹ kolejnym miesi¹com.
 
 \bigskip
 
@@ -42,9 +42,12 @@ $$\begin {array} {|c|c|c|c|}
 \hline
       \ & \mbox{xi} & \mbox{sigma}& \mbox{mu} \\
 \hline              
-\mbox{Parametry rozk³adu GEV}&  0.08649017 & 0.77932777 &  2.01939634\\
+\mbox{Parametry rozk³adu GEV}&  -0.3372591 & 1.0874319 &  4.5626598\\
 \hline
 \end{array}$$
+\bigskip
+
+$xi < 0$, wiêc dystrybuanta F zbiegaj¹ca do rozk³adu GEV nale¿y do maksymalnej dziedziny przyci¹gania Weibulla.
 
 \bigskip
 \bigskip
@@ -72,56 +75,60 @@ $$\begin {array} {|c|c|c|c|}
 \centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/QQplotOfResiduals}}
 
 \bigskip
+\bigskip
+
 
 \begin{itemize}
 	\item Wykres punktowy:
 \end{itemize}
+\bigskip
+\bigskip
 \centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/scatterplot}}
 
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
 
 
 \centerline {\bf Wyznaczono poziomy zwrotu $x_{20}$:}
 
-$$\begin{tabular}{|c|c|c|}
+$$\begin{tabular}{|c|}
 	\hline 
-	\multicolumn{3}{|c|}{Poziomu zwrotu $x_{20}$} \\ 
+	{Poziomu zwrotu $x_{20}$} \\ 
 	\hline 
-	4.495955 & 4.658657 & 4.920852 \\ 
+	6.602865 \\ 
 	\hline 
 \end{tabular} $$
+\bigskip
 
-\centerline{\includegraphics[width=16cm, height=10cm]{bloki-images/poziomZwrotuX20}}
 
-Powy¿ej wykres z punktami poziomu zwrotu.
+\begin{minipage}[c]{14cm}
+Poziom zwrotu obliczony metod¹ maksimów blokowych dla 20-stu bloków, z czego ka¿dy blok zawiera œrednio 30*47 rekordów (47 spisów dziennie przez 30 dni) wynosi 6.602865. Oznacza to, ¿e œrednio raz na miesi¹c mo¿na spodziewaæ siê, ¿e wysokoœæ fal przekroczy 6,6 metra.
+\end{minipage}
+
 
 \begin{minipage}[c]{14cm}
 %\includegraphics[width=14cm]{wykresy.png}
 \end{minipage}
-\bigskip
-\bigskip
-\bigskip
-\bigskip
-\bigskip
-\bigskip
+
+\newpage
 
 \\{\bf 3. Analiza metod¹ przekroczeñ progu (POT).} Kwantyl 90\% $u=3.29$ co oznacza, ¿e 10\% mierzonych fal przekracza³o wysokoœæ 3.29 m.  Ustalono próg na tym poziomie i wyestymowano parametry rozk³adu GPD dla nadwy¿ek nad ten próg:
 
-
-$$\begin{tabular}{|c|c|c|}
-\hline 
-\multicolumn{3}{|c|}{Parametry rozk³adu GPD} \\ 
-\hline 
-\$nexc & \multicolumn{2}{|c|}{2894} \\ 
-\hline 
-\$nllh & \multicolumn{2}{|c|}{1661.926}  \\ 
-\hline 
-\$mle & 0.7715406 & -0.1663637 \\ 
-\hline 
-\$rate & \multicolumn{2}{|c|}{0.09927959} \\ 
-\hline 
-\$se & 0.01771566 & 0.01382912 \\ 
-\hline 
-\end{tabular} $$
+$$\begin {array} {|c|c|c|}
+\hline
+\ & \mbox{xi} & \mbox{beta} \\
+\hline              
+\mbox{Parametry rozk³adu GPD}&  -0.1663637 & 0.7715406 \\
+\hline
+\end{array}$$
+\bigskip
 
 \bigskip
 \bigskip
@@ -129,7 +136,7 @@ $$\begin{tabular}{|c|c|c|}
 \bigskip
 
 \noindent{ Przeprowadzono analizê oceniaj¹c¹ dobroæ dopasowania za pomoc¹ nastêpuj¹cych wykresów diagnostycznych:} 
-
+\bigskip
 
 \noindent 
 \begin{itemize}
@@ -138,6 +145,7 @@ $$\begin{tabular}{|c|c|c|}
 	\centerline{\includegraphics[width=16cm, height=10cm]{pot-images/wykresyRozrzutuZZaznaczonymProgiem01}}
 \bigskip
 \bigskip
+\newpage
 
 \begin{itemize}
 	\item Wykres nadwy¿ek nad próg 90\%:
@@ -156,13 +164,6 @@ $$\begin{tabular}{|c|c|c|}
 	\item Wykres kwantyli dopasowanego rozk³adu:
 \end{itemize}
 \centerline{\includegraphics[width=16cm, height=10cm]{pot-images/dobrocDopasowaniaQqplot05}}
-\bigskip
-\bigskip
-
-\begin{itemize}
-	\item Dobroæ dopasowania na wykresach z pakietu ismev, kolejno: Wykres prawdopodobieñstwa empirycznego, kwantyli dopasowanego rozk³adu, wykres z punktami poziomu zwrotu oraz histogram z zaznaczon¹ gêstoœci¹.
-\end{itemize}
-\centerline{\includegraphics[width=16cm, height=10cm]{pot-images/dobrocDopasowaniaIsmev06}}
 
 \bigskip
 \bigskip
@@ -171,21 +172,34 @@ $$\begin{tabular}{|c|c|c|}
 \centerline {\bf Wyznaczono poziom zwrotu $x_{20}$:}
 
 
-$$\begin{tabular}{|c|c|}
+$$\begin{tabular}{|c|}
 \hline 
-\multicolumn{2}{|c|}{Poziomu zwrotu $x_{20}$} \\ 
+{Poziomu zwrotu $x_{20}$} \\ 
 \hline 
-\mbox{$xi$ ró¿ne od zera} & 3.790135  \\ 
+ 6.689767  \\ 
 \hline 
 \end{tabular} $$
+\bigskip
 
+\begin{minipage}[c]{14cm}
+	Poziom zwrotu obliczony metod¹ przekroczeñ progu wynosi 6.689767. Oznacza to, ¿e œrednio raz na miesi¹c wysokoœæ fal bêdzie mia³a tak¹ wartoœæ lub j¹ przekroczy.
+\end{minipage}
 
 \bigskip
 \bigskip
 \bigskip
 
-\\{\bf 4. Podsumowanie.} Analizuj¹c powy¿sze wykresy oraz obliczenia mo¿na zauwa¿yæ, ¿e analiza metod¹ maksimów blokowych osi¹ga wiêkszy poziom zwrotu ni¿ druga metoda. Mo¿liwym powodem tego mo¿e byæ niew³aœciwie ustalony próg przy metodzie przekroczeñ progu.
+\\{\bf 4. Podsumowanie.} Analizuj¹c powy¿sze wykresy oraz obliczenia mo¿na zauwa¿yæ, ¿e analiza metod¹ przekroczeñ progów  osi¹ga wiêkszy poziom zwrotu ni¿ druga metoda (tabela  poni¿ej). St¹d wniosek, ¿e w tym przypadku metoda przekroczeñ progu (POT) osi¹ga wiêksz¹ dok³adnoœæ ni¿ metoda maksimów blokowych (MMB).
 
+$$\begin {array} {|c|c|c|}
+\hline
+\ & \mbox{Metoda maksimów blokowych} & \mbox{Metoda przekroczeñ progu}  \\
+\hline              
+\mbox{Poziom zwrotu $x_{20}$}&  6.602865 [m] & 6.689767 [m] \\
+\hline
+\mbox{Ró¿nica} & \multicolumn{2}{c|}{8,69 [cm]} \\
+\hline
+\end{array}$$
 
 \bigskip
 \bigskip

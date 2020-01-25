@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.3.6)  5 JAN 2020 20:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.3.6)  25 JAN 2020 19:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -244,102 +244,90 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Try loading font information for U+msa on input line 43.
+LaTeX Font Info:    Try loading font information for U+msa on input line 41.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 43.
+LaTeX Font Info:    Try loading font information for U+msb on input line 41.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 58.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 59.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 58.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 59.
 <bloki-images/histogram.png, id=1, 560.69475pt x 342.078pt>
 File: bloki-images/histogram.png Graphic file (type png)
 <use bloki-images/histogram.png>
-Package pdftex.def Info: bloki-images/histogram.png  used on input line 60.
-(pdftex.def)             Requested size: 455.24681pt x 284.53535pt.
-<bloki-images/blockMaxima.png, id=2, 560.69475pt x 342.078pt>
-File: bloki-images/blockMaxima.png Graphic file (type png)
-<use bloki-images/blockMaxima.png>
-Package pdftex.def Info: bloki-images/blockMaxima.png  used on input line 66.
+Package pdftex.def Info: bloki-images/histogram.png  used on input line 61.
 (pdftex.def)             Requested size: 455.24681pt x 284.53535pt.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./bloki-images/histogram.p
 ng>]
+<bloki-images/blockMaxima.png, id=13, 560.69475pt x 342.078pt>
+File: bloki-images/blockMaxima.png Graphic file (type png)
+<use bloki-images/blockMaxima.png>
+Package pdftex.def Info: bloki-images/blockMaxima.png  used on input line 67.
+(pdftex.def)             Requested size: 455.24681pt x 284.53535pt.
 <bloki-images/QQplotOfResiduals.png, id=14, 560.69475pt x 342.078pt>
 File: bloki-images/QQplotOfResiduals.png Graphic file (type png)
 <use bloki-images/QQplotOfResiduals.png>
 Package pdftex.def Info: bloki-images/QQplotOfResiduals.png  used on input line
- 74.
+ 75.
 (pdftex.def)             Requested size: 455.24681pt x 284.53535pt.
 <bloki-images/scatterplot.png, id=15, 560.69475pt x 342.078pt>
 File: bloki-images/scatterplot.png Graphic file (type png)
 <use bloki-images/scatterplot.png>
-Package pdftex.def Info: bloki-images/scatterplot.png  used on input line 81.
+Package pdftex.def Info: bloki-images/scatterplot.png  used on input line 86.
 (pdftex.def)             Requested size: 455.24681pt x 284.53535pt.
- [2 <./bloki-images/blockMaxima.png> <./bloki-images/QQplotOfResiduals.png>]
-<bloki-images/poziomZwrotuX20.png, id=19, 526.96875pt x 325.215pt>
-File: bloki-images/poziomZwrotuX20.png Graphic file (type png)
-<use bloki-images/poziomZwrotuX20.png>
-Package pdftex.def Info: bloki-images/poziomZwrotuX20.png  used on input line 9
-5.
-(pdftex.def)             Requested size: 455.26688pt x 284.54753pt.
- [3 <./bloki-images/scatterplot.png> <./bloki-images/poziomZwrotuX20.png>]
-<pot-images/wykresyRozrzutuZZaznaczonymProgiem01.png, id=25, 526.96875pt x 325.
-215pt>
+ [2 <./bloki-images/blockMaxima.png> <./bloki-images/QQplotOfResiduals.png>] [3
+ <./bloki-images/scatterplot.png>]
+<pot-images/wykresyRozrzutuZZaznaczonymProgiem01.png, id=23, 643.80525pt x 383.
+031pt>
 File: pot-images/wykresyRozrzutuZZaznaczonymProgiem01.png Graphic file (type pn
 g)
 <use pot-images/wykresyRozrzutuZZaznaczonymProgiem01.png>
 Package pdftex.def Info: pot-images/wykresyRozrzutuZZaznaczonymProgiem01.png  u
-sed on input line 140.
-(pdftex.def)             Requested size: 455.26688pt x 284.54753pt.
-<pot-images/nadwyzkiNadProg90procent02.png, id=26, 526.96875pt x 325.215pt>
+sed on input line 145.
+(pdftex.def)             Requested size: 455.25807pt x 284.54897pt.
+ [4 <./pot-images/wykresyRozrzutuZZaznaczonymProgiem01.png>]
+<pot-images/nadwyzkiNadProg90procent02.png, id=27, 657.657pt x 399.29175pt>
 File: pot-images/nadwyzkiNadProg90procent02.png Graphic file (type png)
 <use pot-images/nadwyzkiNadProg90procent02.png>
 Package pdftex.def Info: pot-images/nadwyzkiNadProg90procent02.png  used on inp
-ut line 147.
-(pdftex.def)             Requested size: 455.26688pt x 284.54753pt.
- [4 <./pot-images/wykresyRozrzutuZZaznaczonymProgiem01.png>]
-<pot-images/dobrocDopasowaniaHistogram04.png, id=31, 526.96875pt x 325.215pt>
+ut line 153.
+(pdftex.def)             Requested size: 455.25897pt x 284.5288pt.
+<pot-images/dobrocDopasowaniaHistogram04.png, id=28, 254.45062pt x 161.85469pt>
+
 File: pot-images/dobrocDopasowaniaHistogram04.png Graphic file (type png)
 <use pot-images/dobrocDopasowaniaHistogram04.png>
 Package pdftex.def Info: pot-images/dobrocDopasowaniaHistogram04.png  used on i
-nput line 154.
-(pdftex.def)             Requested size: 455.26688pt x 284.54753pt.
-<pot-images/dobrocDopasowaniaQqplot05.png, id=32, 526.96875pt x 325.215pt>
+nput line 160.
+(pdftex.def)             Requested size: 455.26576pt x 284.54404pt.
+<pot-images/dobrocDopasowaniaQqplot05.png, id=29, 272.51813pt x 153.57375pt>
 File: pot-images/dobrocDopasowaniaQqplot05.png Graphic file (type png)
 <use pot-images/dobrocDopasowaniaQqplot05.png>
 Package pdftex.def Info: pot-images/dobrocDopasowaniaQqplot05.png  used on inpu
-t line 160.
-(pdftex.def)             Requested size: 455.26688pt x 284.54753pt.
- [5 <./pot-images/nadwyzkiNadProg90procent02.png> <./pot-images/dobrocDopasowan
-iaHistogram04.png>]
-<pot-images/dobrocDopasowaniaIsmev06.png, id=38, 526.96875pt x 325.215pt>
-File: pot-images/dobrocDopasowaniaIsmev06.png Graphic file (type png)
-<use pot-images/dobrocDopasowaniaIsmev06.png>
-Package pdftex.def Info: pot-images/dobrocDopasowaniaIsmev06.png  used on input
- line 167.
-(pdftex.def)             Requested size: 455.26688pt x 284.54753pt.
- [6 <./pot-images/dobrocDopasowaniaQqplot05.png> <./pot-images/dobrocDopasowani
-aIsmev06.png>] [7]
+t line 166.
+(pdftex.def)             Requested size: 455.26997pt x 284.54752pt.
+
+[5 <./pot-images/nadwyzkiNadProg90procent02.png> <./pot-images/dobrocDopasowani
+aHistogram04.png>] [6 <./pot-images/dobrocDopasowaniaQqplot05.png>]
 (./ABrzeska02.aux) ) 
 Here is how much of TeX's memory you used:
- 3083 strings out of 492982
- 41894 string characters out of 6134897
+ 3073 strings out of 492982
+ 41525 string characters out of 6134897
  107297 words of memory out of 5000000
- 6578 multiletter control sequences out of 15000+600000
+ 6570 multiletter control sequences out of 15000+600000
  10593 words of font info for 35 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,8n,25p,291b,150s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,8n,25p,444b,195s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/
 share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/t
@@ -347,10 +335,10 @@ exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf/fonts/typ
 e1/public/cm-super/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/s
 frm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1440.pfb>
-Output written on ABrzeska02.pdf (7 pages, 306555 bytes).
+Output written on ABrzeska02.pdf (6 pages, 363042 bytes).
 PDF statistics:
- 73 PDF objects out of 1000 (max. 8388607)
- 40 compressed objects within 1 object stream
+ 62 PDF objects out of 1000 (max. 8388607)
+ 36 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 51 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

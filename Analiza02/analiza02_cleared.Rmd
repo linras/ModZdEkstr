@@ -1,0 +1,127 @@
+---
+title: "analiza02"
+output: pdf_document
+author: "Antonina Brzeska"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(evir)
+library(tidyverse)
+library(ismev)
+library(ggplot2)
+library(tidyverse)
+```
+
+
+
+```{r}
+
+#WCZYTYWANIE DANYCH
+#path_loc <- "C:/repo/ModZdEkstr/Analiza02"
+path_loc <- "H:/Repo/ModZdEkstr/Analiza02"
+setwd(path_loc)
+
+df <- read_csv("waves20months-ok.csv") ; df
+
+#PODGLĄD DANYCH
+glimpse(df)
+
+#UPEWNIENIE, ŻE DANE SĄ TYPU NUMERYCZNEGO
+df$Hmax <- as.numeric(df$Hmax)
+
+#WCZYTANIE DANYCH Z KOLUMNY WYSOKOŚCI FAL
+data <- df$Hmax
+
+#KWANTYL 90%
+u=quantile(data,0.90); u # u = 3.29 
+
+```
+
+```{r}
+######################################################## METODA MAKSIMÓW BLOKOWYCH BMM
+
+#2. Analiza metodą maksimów blokowych (BMM). Wyestymowano parametry
+#rozkładu GEV w oparciu o maksima z ustalonych bloków 20-stu miesięcy:
+
+fitGEV=evir::gev(data,30*47); 
+fitGEV$par.ests #- wyestymowane parametry xi sigma mu
+xiGEV=fitGEV$par.ests[[1]]; xiGEV
+sigmaGEV=fitGEV$par.ests[[2]]; sigmaGEV
+muGEV=fitGEV$par.ests[[3]]; muGEV
+
+#xi      sigma         mu 
+#-0.3372591  1.0874319  4.5626598
+#fitGEV
+```
+
+
+```{r}
+#Przeprowadzono analizę oceniającą dobroć dopasowania za pomocą następujących
+#wykresów diagnostycznych (METODA MAKSIMÓW BLOKOWYCH BMM):
+
+fitt.X <- fExtremes::gevFit(data,20)
+summary(fitt.X)
+
+```
+
+```{r}
+#POZIOM ZWROTU k20 METODĄ MAKSIMÓW BLOKOWYCH
+fExtremes::gevrlevelPlot(fitt.X,20)
+evir::rlevel.gev(fitGEV, k.blocks = 20) #6.602865
+
+```
+```{r}
+######################################################## METODA PRZEKROCZEŃ PROGU POT
+#3. Analiza metodą przekroczeń progu (POT)
+
+#KWANTYL 90%
+u=quantile(data,0.90); u
+
+#estymujemy parametry rozkladu GPD
+#gpd(dane,u) - podajemy prog lub liczbe nadwyzek
+fitGPD=ismev::gpd.fit(data,u)   #u=kwantyl 90%, 
+#można podać liczbę nadwyżek, tutaj 0.10*length(data)
+
+#wyestymowane parametry rozkladu GPD
+xi=fitGPD$mle[[2]]; xi
+beta=fitGPD$mle[[1]]; beta
+
+#[1] -0.1663637 xi
+#[1] 0.7715406 beta
+
+```
+
+```{r}
+######################################################## METODA PRZEKROCZEŃ PROGU POT
+#wykresy ROZRZUTU z zaznaczonym progiem u=kwantyl 90%
+plot(data)
+abline(h=u,lwd=3,col='red')   
+
+#oraz wykres nadwyzek nad prog u=kwantyl 90%
+Y=data[data>u]
+plot(Y,type='h')
+
+```
+
+```{r}
+######################################################## METODA PRZEKROCZEŃ PROGU POT
+#dobroć dopasowania  na wykresach 
+ismev::gpd.diag(fitGPD)
+
+```
+
+```{r}
+# METODA POT PRZEKROCZEŃ PROGU
+#Nu=length(Y)   #licznosc nadwyzek
+#N=length(data)    #licznosc probki
+
+fitRm= gpd(data,u)
+k20 = 1-1/(20*30*47) #poziom zwrotu k20 30 dni w bloku i 47 rekordów /dzień
+riskmeasures(fitRm,k20)[2] #6.689767
+```
+
