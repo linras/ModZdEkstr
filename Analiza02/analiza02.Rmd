@@ -80,21 +80,26 @@ qqline(Y,distribution=function(x) evir::qgpd(x,xi,0,beta),
 ismev::gpd.diag(fitGPD)
 ```
 ```{r}
-
+# METODA POT PRZEKROCZEŃ PROGU
 Nu=length(Y)   #licznosc nadwyzek
 N=length(data)    #licznosc probki
 
-k=20
-x20=u+((k*Nu/N)^xi-1)*beta/xi #jesli przyjmiemy, ze xi rozne od zera 
-x20Gumbel=u+beta*log(k*Nu/N)  #jesli zdecydujemy,  ze to jednak Gumbel
-x20; x20Gumbel
+fitRm= gpd(data,u)
+k20 = 1-1/(20*30*47) #poziom zwrotu k20 30 dni w bloku i 47 rekordów /dzień
+riskmeasures(fitRm,k20)[2]
+```
+```{r}
+#k=20
+#x20=u+((k*Nu/N)^xi-1)*beta/xi #jesli przyjmiemy, ze xi rozne od zera 
+#x20Gumbel=u+beta*log(k*Nu/N)  #jesli zdecydujemy,  ze to jednak Gumbel
+#x20; #x20Gumbel
 
 ```
 
 ```{r}
 ##################################################################  BLOKI
 
-fitGEV=evir::gev(data,20); 
+fitGEV=evir::gev(data,30*47); 
 fitGEV$par.ests #- wyestymowane parametry xi sigma mu
 xiGEV=fitGEV$par.ests[[1]]; xiGEV
 sigmaGEV=fitGEV$par.ests[[2]]; sigmaGEV
@@ -120,6 +125,7 @@ summary(fitt.X)
 ```{r}
 fExtremes::gevrlevelPlot(fitt.X,20)
 evir::rlevel.gev(fitGEV, k.blocks = 20)
+
 ```
 Rozszerzenie z laboratoriów 7:
 ```{r}
