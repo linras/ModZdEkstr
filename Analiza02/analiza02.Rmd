@@ -38,7 +38,7 @@ df$Hmax <- as.numeric(df$Hmax)
 data <- df$Hmax
 
 #KWANTYL 90%
-u=quantile(data,0.90); u # u = 3.29 
+u=quantile(data,0.99); u # u 90% = 3.29 ; u 99% = 4.75188
 
 ```
 
@@ -76,11 +76,12 @@ evir::rlevel.gev(fitGEV, k.blocks = 20) #6.602865
 
 ```
 ```{r}
-######################################################## METODA PRZEKROCZEŃ PROGU POT
+############################################# METODA PRZEKROCZEŃ PROGU POT
 #3. Analiza metodą przekroczeń progu (POT)
 
 #KWANTYL 90%
-u=quantile(data,0.90); u
+u=quantile(data,0.99); u
+#u=quantile(data, 1-1/(10*30*47)); u
 
 #estymujemy parametry rozkladu GPD
 #gpd(dane,u) - podajemy prog lub liczbe nadwyzek
@@ -90,21 +91,19 @@ fitGPD=ismev::gpd.fit(data,u)   #u=kwantyl 90%,
 #wyestymowane parametry rozkladu GPD
 xi=fitGPD$mle[[2]]; xi
 beta=fitGPD$mle[[1]]; beta
-rate=fitGPD$rate; rate
 
 #[1] -0.1663637 xi
 #[1] 0.7715406 beta
-#[1] 0.09942625 rate
 
 ```
 
 ```{r}
 ######################################################## METODA PRZEKROCZEŃ PROGU POT
-#wykresy ROZRZUTU z zaznaczonym progiem u=kwantyl 90%
+#wykresy ROZRZUTU z zaznaczonym progiem u=kwantyl 99%
 plot(data)
 abline(h=u,lwd=3,col='red')   
 
-#oraz wykres nadwyzek nad prog u=kwantyl 90%
+#oraz wykres nadwyzek nad prog u=kwantyl 99%
 Y=data[data>u]
 plot(Y,type='h')
 
@@ -150,13 +149,161 @@ riskmeasures(fitRm,k20)[2] #6.689767
 #curve(pgev(x,xiGEV,sigmaGEV,muGEV),add=T,col=2)
 ```
 
-
-Rozszerzenie z laboratoriów 7:
 ```{r}
-#Proba z rozkladu wykładniczego
-#X=rexp(10,2)
-#round(X,2)
+########################################################## METODA BOOTSTRAPOWA
+#KWANTYL
+#u=quantile(data,0.99); u
+u=quantile(data, 1-1/(10*30*47)); u # kwantyl 99.99291% = 6.608783 
 
-#srednia, odchylenie standardowe
-#Me=median(X); Me
+#srednia 2.038678, mediana 1.85
+mean(data); median(data)
+
+#generujemy 10000 prob bootstrapowych i obliczamy ŚREDNIĄ puli danych
+Db=c()
+for(i in 1:1000){
+  Y=sample(data,28,replace=TRUE)
+  Db[i]=median(Y)
+}
+alpha <- quantile(Db, 1-1/(20*30*47)); alpha #2.663583
+
+hist(Db,prob=T)
+abline(v=alpha, col=2)
+
+#generujemy 10000 prob bootstrapowych i obliczamy MEDIANĘ puli danych
+Db=c()
+for(i in 1:1000){
+  Y=sample(data,28,replace=TRUE)
+  Db[i]=mean(Y)
+}
+alpha <- quantile(Db, 1-1/(20*30*47)); alpha #2.625515
+
+hist(Db,prob=T)
+abline(v=alpha, col=2)
+
+#generujemy 10000 prob bootstrapowych i obliczamy MAX puli danych
+Db=c()
+for(i in 1:1000){
+  Y=sample(data,28,replace=TRUE)
+  Db[i]=max(Y)
+}
+alpha <- quantile(Db, 1-1/(20*30*47)); alpha #7.03
+
+hist(Db,prob=T)
+abline(v=alpha, col=2)
+
+```
+
+```{r}
+############################################################### BACKTESTING
+
+#kurs zamkniecia
+kz <- data
+head(kz)
+
+#Zmienimy znak i  analizujemy  prawy ogon (straty).
+#Liczymy  kwantyl rzedu 95%, czyli prog powyzej ktorego wpada 5% stop. 
+#Taka zmiana znaku jest  wygodna szczegolnie gdy
+#wykorzystujemy metody z  rozkladami ekstremalnymi.
+
+logz=-diff(log(kz))   #minus log-zwroty
+head(logz)
+
+#Ustalamy "okno" licznosci k=500 i estymujemy kolejne kwantyle trzema metodami
+#Metoda 1 (historyczna) - obliczamy kwantyl z proby
+#Metoda 2 - dopasowujemy rozklad normalny i obliczamy kwantyl tego rozkladu
+#Metoda 3 - metoda POT
+
+Metoda1=c()  
+for (i in 1:3000) { #27100
+  j=i+999
+  X = logz[i:j]
+  Metoda1[i]=quantile(X, 0.95)#(1-1/(20*30*47)))
+}
+
+Metoda2=c()         
+for (i in 1:3000) { #748
+  j=i+999
+  X = logz[i:j]
+  Db=c()
+  for(a in 1:99){
+    Y=sample(X,10,replace=TRUE)
+    Db[a]=max(Y)
+  }
+  Metoda2[i] <- quantile(Db, 0.95);
+}
+
+Metoda3=c()         
+for (i in 1:3000) {
+  j=i+999
+  X = logz[i:j]
+  u=quantile(X,0.95)
+  fitGPD=gpd(X,u)
+  xi=fitGPD$par.est[[1]]
+  beta=fitGPD$par.est[[2]]
+  Nu=length(X[X>u])   #licznosc nadwyzek
+  N=length(X)
+  Metoda3[i]=u+((20*Nu/N)^xi-1)*beta/xi
+}
+
+Metoda4=c()         
+for (i in 1:3000) {
+  j=i+999
+  X = logz[i:j]
+  
+  fit=evir::gev(X,49); 
+  Metoda4[i] = evir::rlevel.gev(fit, k.blocks = 20)[2] ; Metoda4[i]
+}
+
+```
+```{r}
+
+#wyestymowane kwantyle
+head(Metoda1)
+head(Metoda2)
+head(Metoda3)
+head(Metoda4)
+
+#porownanie estymacji na wykresie
+par(mfrow = c(1, 1))
+plot(-logz[1001:4000],type='l',lwd=2, xlab=NA,ylab=NA) #28100
+points(-Metoda2,type='l',col='blue', lwd=2)
+points(-Metoda4,type='l',col='yellow', lwd=2)
+points(-Metoda1,type='p',col='red', lwd=2)
+points(-Metoda3,type='l',col='green', lwd=2)
+legend(500, -0.60, c("historyczna", "bootstrapowa f()=max()", "POT", "Maksima blokowe"), 
+       col = c('red','blue', 'green', 'yellow'),
+       text.col = "green4", lty = c(1, 1, 1, 1), 
+       bg = "gray90")
+
+library('evir')
+
+#Obliczmy ile procent stop przekroczylo wyestymowany trzema metodami prog.
+R1=logz[1001:4000]  #kolejne stopy z pominieciem 500 pierwszych #28100
+L1 <- sapply(R1 > Metoda1, as.integer) #1 - gdy stopa przekroczy prog
+L2 <- sapply(R1 > Metoda2, as.integer) #0 - gdy stopa nie przekroczy progu
+L3 <- sapply(R1 > Metoda3, as.integer) 
+L4 <- sapply(R1 > Metoda4, as.integer) 
+
+head(L1); head(L2); head(L3); head(L4)
+
+p1=100*sum(L1)/length(R1)   #procent jedynek, czyli przekroczen
+p2=100*sum(L2)/length(R1)  
+p3=100*sum(L3)/length(R1)  
+p4=100*sum(L4)/length(R1)  
+
+
+round(p1,2); round(p2,2); round(p3,2); round(p4,2)
+
+#Tes dwumianowy H0: p=0,05 przeciwko H1: p\ne 0,05
+#poziom istotnosci tego testu tez wynosi 0,05 
+binom.test(sum(L1), length(R1), 0.05, alternative = "two.sided")
+binom.test(sum(L2), length(R1), 0.05, alternative = "two.sided")
+binom.test(sum(L3), length(R1), 0.05, alternative = "two.sided")
+binom.test(sum(L4), length(R1), 0.05, alternative = "two.sided")
+
+```
+
+```{r}
+
+```
 
