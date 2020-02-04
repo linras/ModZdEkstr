@@ -119,7 +119,7 @@ Poziom zwrotu obliczony metod¹ maksimów blokowych dla 20-stu bloków, z czego ka¿
 
 \newpage
 
-\\{\bf 3. Analiza metod¹ przekroczeñ progu (POT).} Kwantyl 90\% $u=3.29$ co oznacza, ¿e 10\% mierzonych fal przekracza³o wysokoœæ 3.29 m.  Ustalono próg na tym poziomie i wyestymowano parametry rozk³adu GPD dla nadwy¿ek nad ten próg:
+\\{\bf 3. Analiza metod¹ przekroczeñ progu (POT).} Kwantyl 95\% $u=3.8$ co oznacza, ¿e 5\% mierzonych fal przekracza³o wysokoœæ 3.8 m.  Ustalono próg na tym poziomie i wyestymowano parametry rozk³adu GPD dla nadwy¿ek nad ten próg:
 
 $$\begin {array} {|c|c|c|}
 \hline
@@ -142,15 +142,15 @@ $$\begin {array} {|c|c|c|}
 \begin{itemize}
 	\item Wykres rozrzutu z zaznaczonym progiem:
 \end{itemize}
-	\centerline{\includegraphics[width=16cm, height=10cm]{pot-images/wykresyRozrzutuZZaznaczonymProgiem01}}
+	\centerline{\includegraphics[width=16cm, height=10cm]{pot-images/wykresyRozrzutuZZaznaczonymProgiem9901}}
 \bigskip
 \bigskip
 \newpage
 
 \begin{itemize}
-	\item Wykres nadwy¿ek nad próg 90\%:
+	\item Wykres nadwy¿ek nad próg 99\%:
 \end{itemize}
-\centerline{\includegraphics[width=16cm, height=10cm]{pot-images/nadwyzkiNadProg90procent02}}
+\centerline{\includegraphics[width=16cm, height=10cm]{pot-images/nadwyzkiNadProg99procent02}}
 \bigskip
 \bigskip
 
@@ -189,15 +189,50 @@ $$\begin{tabular}{|c|}
 \bigskip
 \bigskip
 
-\\{\bf 4. Podsumowanie.} Analizuj¹c powy¿sze wykresy oraz obliczenia mo¿na zauwa¿yæ, ¿e analiza metod¹ przekroczeñ progów  osi¹ga wiêkszy poziom zwrotu ni¿ druga metoda (tabela  poni¿ej). St¹d wniosek, ¿e w tym przypadku metoda przekroczeñ progu (POT) osi¹ga wiêksz¹ dok³adnoœæ ni¿ metoda maksimów blokowych (MMB).
+\newpage
 
-$$\begin {array} {|c|c|c|}
+\\{\bf 4. Analiza metod¹ Bootstrap.} Wygenerowano 10000 prób bootrapowych. Ka¿da próba jest œredni¹, median¹ lub wartoœci¹ maksymaln¹ puli 28 danych. 
+
+$$\begin {array} {|c|c|c|c|c|}
 \hline
-\ & \mbox{Metoda maksimów blokowych} & \mbox{Metoda przekroczeñ progu}  \\
+\ & \mbox{Kwantyl oryginalnych danych} & \mbox{Bootsrap: funkcja f()=max()}  & \mbox{f()=œrednia()} & \mbox{f()=mediana()} \\
 \hline              
-\mbox{Poziom zwrotu $x_{20}$}&  6.602865 [m] & 6.689767 [m] \\
+\mbox{$x_{20}$}&  3.8 [m] & 5.615 [m]& 2.20525 [m] & 2.322766 [m]  \\
 \hline
-\mbox{Ró¿nica} & \multicolumn{2}{c|}{8,69 [cm]} \\
+\end{array}$$
+
+\bigskip
+
+{\bf Wniosek: } Przy wyznaczaniu wartoœci ekstremalnych metod¹ bootstrapow¹ wybranie œredniej lub mediany jako funkcjê konwertuj¹c¹ dane jest wyj¹tkowo nieoptymalne- wyniki s¹ gorsze ni¿ przed generacj¹ próbek. Dobrze sprawdza siê natomiast funkcja max(), której wynik przekracza kwantyl oryginalnych danych.
+
+\bigskip
+\bigskip
+\bigskip
+
+\begin{itemize}
+	\item Histogram próbki bootrapowej (z funkcj¹ wyliczaj¹c¹ œrednie) z zaznaczonym kwantylem:
+\end{itemize}
+
+\centerline{\includegraphics[width=16cm, height=10cm]{images-general/histogram-bootstrap}}
+
+\newpage
+\\{\bf 5. Backtesting.} Backtesting przeprowadzono w pêtli 500 iteracji testuj¹c kolejne przedzia³y 1000 danych. Przetestowano dane metod¹ historyczn¹, bootstrapow¹ z funkcjami max i œrednich, metod¹ POT przekroczeñ progu oraz maksimów blokowych.
+
+\bigskip
+
+{\includegraphics[width=6cm, height=3cm]{images-general/legenda}}
+\newline
+\centerline{\includegraphics[width=16cm, height=10cm]{images-general/backtesting}}
+
+\\{\bf 6. Podsumowanie.} Analizuj¹c powy¿sze wykresy oraz obliczenia mo¿na zauwa¿yæ, ¿e analiza metod¹ przekroczeñ progów  osi¹ga wiêkszy poziom zwrotu ni¿ metoda przekroczeñ progu (tabela  poni¿ej). Metoda bootstrapowa zwracaj¹ca œrednie wartoœci przedzia³ów danych w tym przypadku jest nieefektowna- uœredniaj¹c traci siê dane ektremalne. St¹d wniosek, ¿e w przypadku analizy wysokoœci fal metoda przekroczeñ progu (POT) jest najefektywniejsza.
+
+$$\begin {array} {|c|c|c|c|}
+\hline
+\ & \mbox{Metoda maksimów blokowych} & \mbox{Przekroczeñ progu}& \mbox{Bootstrap f=œrednia()}  \\
+\hline              
+\mbox{Poziom zwrotu $x_{20}$}&  6.602865 [m] & 6.689767 [m] & 2.20525 [m]\\
+\hline
+\mbox{Ró¿nica} & \multicolumn{2}{c|}{8,69 [cm]} &\\
 \hline
 \end{array}$$
 
