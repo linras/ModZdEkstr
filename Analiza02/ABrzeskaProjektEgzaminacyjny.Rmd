@@ -1,7 +1,7 @@
 ---
-title: "analiza02"
-output: pdf_document
+title: "Projekt egzaminacyjny"
 author: "Antonina Brzeska"
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -126,34 +126,11 @@ k20 = 1-1/(20*30*47) #poziom zwrotu k20 30 dni w bloku i 47 rekordów /dzień
 riskmeasures(fitRm,k20)[2] #6.689767
 ```
 
-```{r}
-#dodatkowe wykresy
-#hist(Y,prob=TRUE)                                    #histogram nadwyżek
-#curve(evir::dgpd(x,xi,0,beta),col='red',lwd=2,add=T) #gęstość rozkładu GPD
-
-#qqplot(Y,evir::qgpd(ppoints(1000),xi,0,beta))   #QQ-ploty
-#qqline(Y,distribution=function(x) evir::qgpd(x,xi,0,beta),
-#       prob=c(0.25,0.75), col=2)
-
-```
-
 
 ```{r}
-#hist(data,prob=TRUE, xlim=c(-3,7), ylim =c(0,0.3))
-#curve(dgev(x,xiGEV,sigmaGEV,muGEV),add=T)
-```
-```{r}
-#Dystrybuanty empiryczne i dopasowane 
-#podajemy parametry w kolejnosci (xi,mu,sigma)!
-#plot(ecdf(data))
-#curve(pgev(x,xiGEV,sigmaGEV,muGEV),add=T,col=2)
-```
-
-```{r}
-########################################################## METODA BOOTSTRAPOWA
+################################################ METODA BOOTSTRAPOWA
 #KWANTYL
-#u=quantile(data,0.99); u
-u=quantile(data, 1-1/(10*30*47)); u # kwantyl 99.99291% = 6.608783 
+u=quantile(data,0.95); u # kwantyl 95% = 3.8
 
 #srednia 2.038678, mediana 1.85
 mean(data); median(data)
@@ -164,7 +141,7 @@ for(i in 1:1000){
   Y=sample(data,28,replace=TRUE)
   Db[i]=median(Y)
 }
-alpha <- quantile(Db, 1-1/(20*30*47)); alpha #2.663583
+alpha <- quantile(Db, 1-1/(20)); alpha #2.20525
 
 hist(Db,prob=T)
 abline(v=alpha, col=2)
@@ -175,7 +152,7 @@ for(i in 1:1000){
   Y=sample(data,28,replace=TRUE)
   Db[i]=mean(Y)
 }
-alpha <- quantile(Db, 1-1/(20*30*47)); alpha #2.625515
+alpha <- quantile(Db, 1-1/(20)); alpha #2.322766
 
 hist(Db,prob=T)
 abline(v=alpha, col=2)
@@ -186,7 +163,7 @@ for(i in 1:1000){
   Y=sample(data,28,replace=TRUE)
   Db[i]=max(Y)
 }
-alpha <- quantile(Db, 1-1/(20*30*47)); alpha #7.03
+alpha <- quantile(Db, 1-1/(20)); alpha #5.615
 
 hist(Db,prob=T)
 abline(v=alpha, col=2)
@@ -194,7 +171,7 @@ abline(v=alpha, col=2)
 ```
 
 ```{r}
-############################################################### BACKTESTING
+####################################################### BACKTESTING
 
 logz=-diff(log(data))   #minus log-zwroty
 head(logz)
@@ -276,8 +253,6 @@ points(-Metoda5,type='l',col='orange', lwd=2)
 #       text.col = "green4", lty = c(1, 1, 1, 1), 
 #       bg = "gray90")
 
-library('evir')
-
 #ile procent stop przekroczylo wyestymowany tymi metodami prog.
 R1=logz[1001:1500]  #kolejne stopy z pominieciem 1000 pierwszych #28100
 L1 <- sapply(R1 > Metoda1, as.integer) #1 - gdy stopa przekroczy prog
@@ -299,8 +274,3 @@ p5=100*sum(L5)/length(R1)
 round(p1,2); round(p2,2); round(p3,2); round(p4,2); round(p5,2)
 
 ```
-
-```{r}
-
-```
-
