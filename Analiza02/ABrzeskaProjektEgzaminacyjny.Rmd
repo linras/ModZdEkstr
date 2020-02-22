@@ -48,7 +48,7 @@ u=quantile(data,0.99); u # u 90% = 3.29 ; u 99% = 4.75188
 #2. Analiza metodą maksimów blokowych (BMM). Wyestymowano parametry
 #rozkładu GEV w oparciu o maksima z ustalonych bloków 20-stu miesięcy:
 
-fitGEV=evir::gev(data,30*47); 
+fitGEV=evir::gev(data, block=30*47); 
 fitGEV$par.ests #- wyestymowane parametry xi sigma mu
 xiGEV=fitGEV$par.ests[[1]]; xiGEV
 sigmaGEV=fitGEV$par.ests[[2]]; sigmaGEV
@@ -79,8 +79,27 @@ evir::rlevel.gev(fitGEV, k.blocks = 20) #6.602865
 ############################################# METODA PRZEKROCZEŃ PROGU POT
 #3. Analiza metodą przekroczeń progu (POT)
 
+# zmienna l to ilość rekordów w ciągu dnia
+l=30*47; #????????
+k20 = l * 20
+k10 = l * 10
+k7 = l * 20/3
+q95 = 1 - 1/k20
+q90 = 1 - 1/k10
+q85 = 1 - 1/k7
+
+u=quantile(data,q90)  # wybieramy prog na poziomie kwantyla 90% dla naszych danych
+u
+
+plot(X)
+abline(h=u,lwd=3,col='red')   
+
+#nadwyzki nad prog u
+Y=X[X>u]-u
+plot(Y,type='h')
+
 #KWANTYL 90%
-u=quantile(data,0.99); u
+u=quantile(data,0.90); u
 #u=quantile(data, 1-1/(10*30*47)); u
 
 #estymujemy parametry rozkladu GPD
@@ -114,6 +133,14 @@ plot(Y,type='h')
 #dobroć dopasowania  na wykresach 
 ismev::gpd.diag(fitGPD)
 
+#dobroc dopasowania  na wykresach #2
+hist(Y,prob=TRUE)                                    #histogram nadwyzek
+curve(evir::dgpd(x,xi,0,beta),col='red',lwd=2,add=T) #gestosc rozkladu GPD
+
+qqplot(Y,evir::qgpd(ppoints(1000),xi,0,beta))   #QQ-ploty
+qqline(Y,distribution=function(x) evir::qgpd(x,xi,0,beta),
+       prob=c(0.25,0.75), col=2)
+
 ```
 
 ```{r}
@@ -124,6 +151,18 @@ ismev::gpd.diag(fitGPD)
 fitRm= gpd(data,u)
 k20 = 1-1/(20*30*47) #poziom zwrotu k20 30 dni w bloku i 47 rekordów /dzień
 riskmeasures(fitRm,k20)[2] #6.689767
+
+#poziom zwrotu x20 ze wzoru z reki
+Y=data[data>u]-u     #nadwyzki
+
+Nu=length(Y)   #licznosc nadwyzek
+N=length(data)    #licznosc probki
+
+l=30*47; #????????
+k20 = l * 20
+k=k20 #to jest to l*20
+x20=u+((k*Nu/N)^xi-1)*beta/xi #przyjmujemy, ze xi rozne od zera 
+x20
 ```
 
 
@@ -135,40 +174,44 @@ u=quantile(data,0.95); u # kwantyl 95% = 3.8
 #srednia 2.038678, mediana 1.85
 mean(data); median(data)
 
-#generujemy 10000 prob bootstrapowych i obliczamy ŚREDNIĄ puli danych
+#kwantyl
+Qu=quantile(X, 0.95); Qu
+
+#generujemy 10000 prob bootstrapowych i obliczamy roznice kwantyli
 Db=c()
 for(i in 1:1000){
   Y=sample(data,28,replace=TRUE)
-  Db[i]=median(Y)
+  Db[i]=quantile(Y, 0.95)
 }
-alpha <- quantile(Db, 1-1/(20)); alpha #2.20525
 
+bootstrap_mean = mean(Db) ; bootstrap_mean #srednia
+bias = bootstrap_mean - Qu ; bias #obciazenie
+
+#wartość kwantyla rzedu rozkladu F
+qu_with_no_bias <- Qu - bias
+qu_with_no_bias
+
+#rozklad estymatora "kwantyli" na probach bootsrapowych (prob jest duzo wiec histogram dobrze odzwierciedka rzeczywisty rozklad)
 hist(Db,prob=T)
-abline(v=alpha, col=2)
+points(Qu,0,pch=19, col="blue")       #kwantyl wyliczona z estymatora "kwantyl"
+points(qu_with_no_bias,0,pch=19, col="green")    #kwantyl z estymatora poprawionego: "kwantyl"-bias
 
-#generujemy 10000 prob bootstrapowych i obliczamy MEDIANĘ puli danych
-Db=c()
-for(i in 1:1000){
-  Y=sample(data,28,replace=TRUE)
-  Db[i]=mean(Y)
-}
-alpha <- quantile(Db, 1-1/(20)); alpha #2.322766
+#kwantyle z rozkladu zmiennej Db
+alpha <- 1-0.95
+alpha1 <- alpha/2
+alpha2 <- 1-alpha/2
 
+q1 <- quantile(Db,alpha1)
+q2 <- quantile(Db,alpha2)
+
+#rozklad na wykresach
 hist(Db,prob=T)
-abline(v=alpha, col=2)
+abline(v=q1, col=2)
+abline(v=q2, col=2)
 
-#generujemy 10000 prob bootstrapowych i obliczamy MAX puli danych
-Db=c()
-for(i in 1:1000){
-  Y=sample(data,28,replace=TRUE)
-  Db[i]=max(Y)
-}
-alpha <- quantile(Db, 1-1/(20)); alpha #5.615
-
-hist(Db,prob=T)
-abline(v=alpha, col=2)
-
-```
+#przedial ufnosci na poziomie ufnosci 95%
+CI <- c(q2,q1)
+CI
 
 ```{r}
 ####################################################### BACKTESTING
@@ -178,7 +221,7 @@ head(logz)
 
 #Ustalamy "okno" licznosci 1000 i estymujemy kolejne kwantyle trzema metodami (500 przejść pętli)
 
-#Metoda 1 (historyczna)
+#Metoda 1 maksimów blokowych
 Metoda1=c()  
 for (i in 1:1500) { #27100
   j=i+999
@@ -186,30 +229,24 @@ for (i in 1:1500) { #27100
   Metoda1[i]=quantile(X, 0.95)#(1-1/(20*30*47)))
 }
 
+q95 = u;
 #Metoda 2 - bootstrap (MAX)
 Metoda2=c()         
 for (i in 1:1500) { #748
   j=i+999
   X = logz[i:j]
+  Qu = quantile(X,q95)
   Db=c()
-  for(a in 1:99){
+  for(a in 1:1000){
     Y=sample(X,10,replace=TRUE)
-    Db[a]=max(Y)
+    Db[a]=quantile(Y, q95)
   }
-  Metoda2[i] <- quantile(Db, 0.95);
-}
 
-#Metoda 5 - bootstrap (ŚREDNIA)
-Metoda5=c()         
-for (i in 1:1500) {
-  j=i+999
-  X = logz[i:j]
-  Db=c()
-  for(a in 1:99){
-    Y=sample(X,10,replace=TRUE)
-    Db[a]=mean(Y)
-  }
-  Metoda5[i] <- quantile(Db, 0.95);
+  bootstrap_mean = mean(Db)
+  bias = bootstrap_mean - Qu
+  
+  qu_with_no_bias <- Qu - bias
+  Metoda2[i] <- qu_with_no_bias;
 }
 
 #Metoda 3 - POT
