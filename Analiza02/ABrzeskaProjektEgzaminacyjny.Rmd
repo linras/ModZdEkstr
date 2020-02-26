@@ -15,6 +15,7 @@ library(tidyverse)
 library(ismev)
 library(ggplot2)
 library(tidyverse)
+library(MASS)
 ```
 
 
@@ -22,8 +23,8 @@ library(tidyverse)
 ```{r}
 
 #WCZYTYWANIE DANYCH
-#path_loc <- "C:/repo/ModZdEkstr/Analiza02"
-path_loc <- "H:/Repo/ModZdEkstr/Analiza02"
+path_loc <- "C:/repo/ModZdEkstr/Analiza02"
+#path_loc <- "H:/Repo/ModZdEkstr/Analiza02"
 setwd(path_loc)
 
 df <- read_csv("waves20months-ok.csv") ; df
@@ -37,166 +38,95 @@ df$Hmax <- as.numeric(df$Hmax)
 #WCZYTANIE DANYCH Z KOLUMNY WYSOKOŚCI FAL
 data <- df$Hmax
 
-#KWANTYL 90%
-u=quantile(data,0.99); u # u 90% = 3.29 ; u 99% = 4.75188
+recordsPerMonth <- 47*30; #ilosc odnotowanych rekordów w bloku 30-dniowym
+
 
 ```
 
 ```{r}
-######################################################## METODA MAKSIMÓW BLOKOWYCH BMM
+#################################### METODA MAKSIMÓW BLOKOWYCH BMM
 
-#2. Analiza metodą maksimów blokowych (BMM). Wyestymowano parametry
-#rozkładu GEV w oparciu o maksima z ustalonych bloków 20-stu miesięcy:
+#Analiza metodą maksimów blokowych (BMM). Wyestymowano parametry
+#rozkładu GEV w oparciu o maksima z ustalonych bloków:
 
-fitGEV=evir::gev(data, block=30*47); 
-fitGEV$par.ests #- wyestymowane parametry xi sigma mu
+fit.X <- evir::gev(data, recordsPerMonth)
+Mn <- fit.X$data 
+fit.n <- ismev::gev.fit(Mn)
+ismev::gev.diag(fit.n)
+
+#POZIOM ZWROTU k20 METODĄ MAKSIMÓW BLOKOWYCH
+evir::rlevel.gev(fit.X, k.blocks = 20) #6.602865
+
+#- wyestymowane parametry xi sigma mu
 xiGEV=fitGEV$par.ests[[1]]; xiGEV
 sigmaGEV=fitGEV$par.ests[[2]]; sigmaGEV
 muGEV=fitGEV$par.ests[[3]]; muGEV
 
-#xi      sigma         mu 
-#-0.3372591  1.0874319  4.5626598
-#fitGEV
-```
-
-
-```{r}
-#Przeprowadzono analizę oceniającą dobroć dopasowania za pomocą następujących
-#wykresów diagnostycznych (METODA MAKSIMÓW BLOKOWYCH BMM):
-
-fitt.X <- fExtremes::gevFit(data,20)
+#Przeprowadzono analizę oceniającą dobroć dopasowania za pomocą #następujących wykresów diagnostycznych:
+fitt.X <- fExtremes::gevFit(data,recordsPerMonth)
+fitt.X
 summary(fitt.X)
 
+fExtremes::gevrlevelPlot(fitt.X,20) 
+
+#xi      sigma         mu 
+#-0.3372591  1.0874319  4.5626598
 ```
 
+
 ```{r}
-#POZIOM ZWROTU k20 METODĄ MAKSIMÓW BLOKOWYCH
-fExtremes::gevrlevelPlot(fitt.X,20)
-evir::rlevel.gev(fitGEV, k.blocks = 20) #6.602865
+###################################### METODA PRZEKROCZEŃ PROGU POT
+# Analiza metodą przekroczeń progu (POT)
 
-```
-```{r}
-############################################# METODA PRZEKROCZEŃ PROGU POT
-#3. Analiza metodą przekroczeń progu (POT)
+#KWANTYL 95%
+u=quantile(data,0.95); u # u 90% = 3.29 ; u 95% = 3.8 ; u 99% = 4.75188
 
-# zmienna l to ilość rekordów w ciągu dnia
-l=30*47; #????????
-k20 = l * 20
-k10 = l * 10
-k7 = l * 20/3
-q95 = 1 - 1/k20
-q90 = 1 - 1/k10
-q85 = 1 - 1/k7
+#plot(data)
+#abline(h=u,lwd=3,col='red')   
+fitGPD=ismev::gpd.fit(data,u)
 
-u=quantile(data,q90)  # wybieramy prog na poziomie kwantyla 90% dla naszych danych
-u
-
-plot(X)
-abline(h=u,lwd=3,col='red')   
-
-#nadwyzki nad prog u
-Y=X[X>u]-u
-plot(Y,type='h')
-
-#KWANTYL 90%
-u=quantile(data,0.90); u
-#u=quantile(data, 1-1/(10*30*47)); u
-
-#estymujemy parametry rozkladu GPD
-#gpd(dane,u) - podajemy prog lub liczbe nadwyzek
-fitGPD=ismev::gpd.fit(data,u)   #u=kwantyl 90%, 
-#można podać liczbę nadwyżek, tutaj 0.10*length(data)
-
-#wyestymowane parametry rozkladu GPD
-xi=fitGPD$mle[[2]]; xi
-beta=fitGPD$mle[[1]]; beta
-
-#[1] -0.1663637 xi
-#[1] 0.7715406 beta
+xi=fitGPD$mle[[2]]
+beta=fitGPD$mle[[1]]
+xi; beta;
+#[1] -0.1566445 xi
+#[1] 0.6728065 beta
+ismev::gpd.diag(fitGPD)
+fitGPD = gpd(data, u)
+k20 = 1-1/(20*recordsPerMonth)
+riskmeasures(fitGPD,k20)[2] #6.715564
 
 ```
 
 ```{r}
-######################################################## METODA PRZEKROCZEŃ PROGU POT
-#wykresy ROZRZUTU z zaznaczonym progiem u=kwantyl 99%
+############################################### METODA PRZEKROCZEŃ PROGU POT
+#wykresy ROZRZUTU z zaznaczonym progiem u=kwantyl 95%
+u=quantile(data,0.95); u # u 90% = 3.29 ; U 95% = 3.8 ; u 99% = 4.75188
 plot(data)
 abline(h=u,lwd=3,col='red')   
 
-#oraz wykres nadwyzek nad prog u=kwantyl 99%
+#oraz wykres nadwyzek nad prog u
 Y=data[data>u]
 plot(Y,type='h')
 
 ```
 
 ```{r}
-######################################################## METODA PRZEKROCZEŃ PROGU POT
-#dobroć dopasowania  na wykresach 
-ismev::gpd.diag(fitGPD)
-
-#dobroc dopasowania  na wykresach #2
-hist(Y,prob=TRUE)                                    #histogram nadwyzek
-curve(evir::dgpd(x,xi,0,beta),col='red',lwd=2,add=T) #gestosc rozkladu GPD
-
-qqplot(Y,evir::qgpd(ppoints(1000),xi,0,beta))   #QQ-ploty
-qqline(Y,distribution=function(x) evir::qgpd(x,xi,0,beta),
-       prob=c(0.25,0.75), col=2)
-
-```
-
-```{r}
-# METODA POT PRZEKROCZEŃ PROGU
-#Nu=length(Y)   #licznosc nadwyzek
-#N=length(data)    #licznosc probki
-
-fitRm= gpd(data,u)
-k20 = 1-1/(20*30*47) #poziom zwrotu k20 30 dni w bloku i 47 rekordów /dzień
-riskmeasures(fitRm,k20)[2] #6.689767
-
-#poziom zwrotu x20 ze wzoru z reki
-Y=data[data>u]-u     #nadwyzki
-
-Nu=length(Y)   #licznosc nadwyzek
-N=length(data)    #licznosc probki
-
-l=30*47; #????????
-k20 = l * 20
-k=k20 #to jest to l*20
-x20=u+((k*Nu/N)^xi-1)*beta/xi #przyjmujemy, ze xi rozne od zera 
-x20
-```
-
-
-```{r}
-################################################ METODA BOOTSTRAPOWA
-#KWANTYL
-u=quantile(data,0.95); u # kwantyl 95% = 3.8
-
-#srednia 2.038678, mediana 1.85
-mean(data); median(data)
-
-#kwantyl
-Qu=quantile(X, 0.95); Qu
-
-#generujemy 10000 prob bootstrapowych i obliczamy roznice kwantyli
+############################################ METODA BOOTSTRAPOWA
+# 3
+u=quantile(data,0.95)
 Db=c()
 for(i in 1:1000){
-  Y=sample(data,28,replace=TRUE)
+  Y=sample(data,28000,replace=TRUE)
   Db[i]=quantile(Y, 0.95)
 }
 
-bootstrap_mean = mean(Db) ; bootstrap_mean #srednia
-bias = bootstrap_mean - Qu ; bias #obciazenie
+mean(Db) # 3.803075
+bias = mean(Db) - u ; bias #0.00307471
 
-#wartość kwantyla rzedu rozkladu F
-qu_with_no_bias <- Qu - bias
-qu_with_no_bias
+u_wo_bias <- u - bias ; u_wo_bias #3.796925
 
-#rozklad estymatora "kwantyli" na probach bootsrapowych (prob jest duzo wiec histogram dobrze odzwierciedka rzeczywisty rozklad)
 hist(Db,prob=T)
-points(Qu,0,pch=19, col="blue")       #kwantyl wyliczona z estymatora "kwantyl"
-points(qu_with_no_bias,0,pch=19, col="green")    #kwantyl z estymatora poprawionego: "kwantyl"-bias
 
-#kwantyle z rozkladu zmiennej Db
 alpha <- 1-0.95
 alpha1 <- alpha/2
 alpha2 <- 1-alpha/2
@@ -204,110 +134,110 @@ alpha2 <- 1-alpha/2
 q1 <- quantile(Db,alpha1)
 q2 <- quantile(Db,alpha2)
 
-#rozklad na wykresach
 hist(Db,prob=T)
 abline(v=q1, col=2)
 abline(v=q2, col=2)
 
-#przedial ufnosci na poziomie ufnosci 95%
 CI <- c(q2,q1)
 CI
+#97.5%  2.5% 
+# 3.84  3.77 
+```
 
 ```{r}
 ####################################################### BACKTESTING
+# Metoda 1 - BMM
+# Metoda 2 - POT
+# Metoda 3 - Bootstrap
 
-logz=-diff(log(data))   #minus log-zwroty
-head(logz)
-
-#Ustalamy "okno" licznosci 1000 i estymujemy kolejne kwantyle trzema metodami (500 przejść pętli)
-
-#Metoda 1 maksimów blokowych
 Metoda1=c()  
-for (i in 1:1500) { #27100
+for (i in 1:4000) { 
   j=i+999
-  X = logz[i:j]
-  Metoda1[i]=quantile(X, 0.95)#(1-1/(20*30*47)))
+  A = data[i:j]
+  fitt.X <- fExtremes::gevFit(A,50)
+  Metoda1[i] = fExtremes::gevrlevelPlot(fitt.X,20)[[2]]
 }
 
-q95 = u;
-#Metoda 2 - bootstrap (MAX)
-Metoda2=c()         
-for (i in 1:1500) { #748
-  j=i+999
-  X = logz[i:j]
-  Qu = quantile(X,q95)
-  Db=c()
-  for(a in 1:1000){
-    Y=sample(X,10,replace=TRUE)
-    Db[a]=quantile(Y, q95)
-  }
+k20 = recordsPerMonth * 20
+qk20 = 1 - 1/k20 ; qk20
 
+library('ismev')
+Metoda2=c()         
+for (i in 1:4000) {
+  j=i+999
+  B = data[i:j]
+  u=quantile(B, qk20)
+  fitGPD=gpd.fit(B,u, show=FALSE)
+  xi=fitGPD$mle[[2]]
+  beta=fitGPD$mle[[1]]
+  Nu=length(B[B>u])
+  N=length(B)
+  Metoda2[i]=u+((k20*Nu/N)^xi-1)*beta/xi
+}
+#Metoda2
+
+Metoda3=c()         
+for (i in 1:4000) {
+  j=i+999
+  C = data[i:j]
+  Qu=quantile(C,qk20)
+  
+  Db=c()
+  for(k in 1:200){
+    Y=sample(C,1000,replace=TRUE)
+    Db[k]=quantile(Y, qk20)
+  }
+  
   bootstrap_mean = mean(Db)
   bias = bootstrap_mean - Qu
   
   qu_with_no_bias <- Qu - bias
-  Metoda2[i] <- qu_with_no_bias;
-}
-
-#Metoda 3 - POT
-Metoda3=c()         
-for (i in 1:1500) {
-  j=i+999
-  X = logz[i:j]
-  u=quantile(X,0.95)
-  fitGPD=gpd(X,u)
-  xi=fitGPD$par.est[[1]]
-  beta=fitGPD$par.est[[2]]
-  Nu=length(X[X>u])   #licznosc nadwyzek
-  N=length(X)
-  Metoda3[i]=u+((20*Nu/N)^xi-1)*beta/xi
-}
-
-#Metoda 4 - metoda przekroczeń progu
-Metoda4=c()         
-for (i in 1:1500) {
-  j=i+999
-  X = logz[i:j]
   
-  fit=evir::gev(X,49); 
-  Metoda4[i] = evir::rlevel.gev(fit, k.blocks = 20)[2] ; Metoda4[i]
+  Metoda3[i]=qu_with_no_bias
 }
 
+Metoda4=c()  
+for (i in 1:4000) { 
+  j=i+999
+  A = data[i:j]
+  fitN=fitdistr(A,"normal")
+  par=as.numeric(fitN$estimate)
+  Metoda4[i]=qnorm(0.95,par[1],par[2])
+}
+#Metoda3
+
+#wyestymowane kwantyle
+head(Metoda1)
+head(Metoda2)
+head(Metoda3)
 ```
 ```{r}
 
-#porownanie estymacji na wykresie
 par(mfrow = c(1, 1))
-plot(-logz[1001:1500],type='l',lwd=2, xlab=NA,ylab=NA) #28100
-points(-Metoda2,type='l',col='blue', lwd=2)
-points(-Metoda4,type='l',col='yellow', lwd=2)
-points(-Metoda1,type='p',col='red', lwd=2)
-points(-Metoda3,type='l',col='green', lwd=2)
-points(-Metoda5,type='l',col='orange', lwd=2)
+plot(data[1000:4000],type='l',lwd=2, xlab=NA,ylab=NA,ylim=c(0,7))
+points(Metoda1,type='l',col=2, lwd=2)
+points(Metoda2,type='l',col='blue', lwd=2)
+points(Metoda3,type='l',col='green', lwd=2)
+legend(100, 500, c("BMM", "POT", "bootstrap"), 
+       col = c(2,'blue', 'green'),
+       text.col = "green4", lty = c(1, 1, 1), 
+       bg = "gray90")
 
-#legend(50, -0.06, c("historyczna", "bootstrapowa f()=max()","bootstrapowa #f()=średnia()", "POT", "Maksima blokowe"), 
-#       col = c('red','blue','orange', 'green', 'yellow'),
-#       text.col = "green4", lty = c(1, 1, 1, 1), 
-#       bg = "gray90")
-
-#ile procent stop przekroczylo wyestymowany tymi metodami prog.
-R1=logz[1001:1500]  #kolejne stopy z pominieciem 1000 pierwszych #28100
-L1 <- sapply(R1 > Metoda1, as.integer) #1 - gdy stopa przekroczy prog
-L2 <- sapply(R1 > Metoda2, as.integer) #0 - gdy stopa nie przekroczy progu
+R1=data[1000:4000]  
+L1 <- sapply(R1 > Metoda1, as.integer)
+L2 <- sapply(R1 > Metoda2, as.integer)
 L3 <- sapply(R1 > Metoda3, as.integer) 
-L4 <- sapply(R1 > Metoda4, as.integer) 
-L5 <- sapply(R1 > Metoda5, as.integer) 
 
-head(L1); head(L2); head(L3); head(L4); head(L5)
+head(L1); head(L2); head(L3)
 
-#procent jedynek, czyli przekroczen
 p1=100*sum(L1)/length(R1)
-p2=100*sum(L2)/length(R1)
-p3=100*sum(L3)/length(R1)
-p4=100*sum(L4)/length(R1)
-p5=100*sum(L5)/length(R1)
+p2=100*sum(L2)/length(R1)  
+p3=100*sum(L3)/length(R1)  
 
+round(p1,2); round(p2,2); round(p3,2)
 
-round(p1,2); round(p2,2); round(p3,2); round(p4,2); round(p5,2)
-
+binom.test(sum(L1), length(R1), 0.05, alternative = "two.sided")
+binom.test(sum(L2), length(R1), 0.05, alternative = "two.sided")
+binom.test(sum(L3), length(R1), 0.05, alternative = "two.sided")
 ```
+

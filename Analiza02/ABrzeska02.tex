@@ -31,11 +31,13 @@
 \centerline{ Antonina Brzeska 246824}
 \bigskip
 
-\\{\bf 1. Krótki opis wybranych danych. } Zestaw danych opisuje zanotowane wysokoœci fal na wybrze¿u Australijskim w  miejscowoœci Mooloolaba. Wybrane pomiary zawieraj¹ 29108 rekordów, z czego mierzono je w okresie 20 miesiêcy pocz¹wszy od stycznia 2017 roku. W ka¿dym miesi¹cu pobrano podobn¹ iloœæ danych (47 rekordów dziennie), dlatego mo¿na za³o¿yæ, ¿e analizowane dalej bloki odpowiadaj¹ kolejnym miesi¹com.
+\\{\bf 1. Krótki opis wybranych danych. } Zestaw danych opisuje zanotowane wysokoœci fal na wybrze¿u Australijskim w  miejscowoœci Mooloolaba. Wybrane pomiary zawieraj¹ 29108 rekordów, z czego mierzono je w okresie 20 miesiêcy pocz¹wszy od stycznia 2017 roku. W ka¿dym miesi¹cu pobrano podobn¹ iloœæ danych (47 rekordów dziennie).
 
 \bigskip
 
-\\{\bf 2. Analiza metod¹ maksimów blokowych (BMM).} Wyestymowano parametry rozk³adu GEV w oparciu o maksima z ustalonych bloków miesiêcznych:
+\\{\bf 2. Analiza metod¹ maksimów blokowych (BMM).} Wyestymowano parametry rozk³adu GEV w oparciu o maksima z ustalonych równych, nienachodz¹cych na siebie bloków o równej d³ugoœci. 
+
+Dane maj¹ du¿o punktów pomiarowych (47 dziennie) wiêc przyjêto rozmiar bloku równy 1410, co odpowiada iloœci pomiarów w bloku 30-dniowym (miesi¹cu).
 \bigskip
 
 $$\begin {array} {|c|c|c|c|}
@@ -109,7 +111,7 @@ $$\begin{tabular}{|c|}
 
 
 \begin{minipage}[c]{14cm}
-Poziom zwrotu obliczony metod¹ maksimów blokowych dla 20-stu bloków, z czego ka¿dy blok zawiera œrednio 30*47 rekordów (47 spisów dziennie przez 30 dni) wynosi 6.602865. Oznacza to, ¿e œrednio raz na miesi¹c mo¿na spodziewaæ siê, ¿e wysokoœæ fal przekroczy 6,6 metra.
+Poziom zwrotu obliczony metod¹ maksimów blokowych dla 20-stu bloków, z czego ka¿dy blok zawiera œrednio 30*47 rekordów (47 spisów dziennie przez 30 dni) wynosi 6.602865. Oznacza to, ¿e raz na 20 miesiêcy w miejscowoœci Mooloolaba mo¿na spodziewaæ siê, ¿e wysokoœæ fal przekroczy 6,6 metra.
 \end{minipage}
 
 
@@ -119,13 +121,13 @@ Poziom zwrotu obliczony metod¹ maksimów blokowych dla 20-stu bloków, z czego ka¿
 
 \newpage
 
-\\{\bf 3. Analiza metod¹ przekroczeñ progu (POT).} Kwantyl 95\% $u=3.8$ co oznacza, ¿e 5\% mierzonych fal przekracza³o wysokoœæ 3.8 m.  Ustalono próg na tym poziomie i wyestymowano parametry rozk³adu GPD dla nadwy¿ek nad ten próg:
+\\{\bf 3. Analiza metod¹ przekroczeñ progu (POT).} Metoda polega na poddaniu analizie danych w zale¿noœci od ustalonego progu. Wybrany próg to kwantyl 95\% danych. W tym przypadku kwantyl $u=3.8$ co oznacza, ¿e 5\% mierzonych fal przekracza³o wysokoœæ 3.8 m. Wziêto nastêpnie pod uwagê wartoœci nadwy¿ek nad ten próg i wyestymowano parametry rozk³adu GPD:
 
 $$\begin {array} {|c|c|c|}
 \hline
 \ & \mbox{xi} & \mbox{beta} \\
 \hline              
-\mbox{Parametry rozk³adu GPD}&  -0.1663637 & 0.7715406 \\
+\mbox{Parametry rozk³adu GPD}&  -0.1566445 & 0.6728065 \\
 \hline
 \end{array}$$
 \bigskip
@@ -148,7 +150,7 @@ $$\begin {array} {|c|c|c|}
 \newpage
 
 \begin{itemize}
-	\item Wykres nadwy¿ek nad próg 99\%:
+	\item Wykres nadwy¿ek nad próg:
 \end{itemize}
 \centerline{\includegraphics[width=16cm, height=10cm]{pot-images/nadwyzkiNadProg99procent02}}
 \bigskip
@@ -176,13 +178,13 @@ $$\begin{tabular}{|c|}
 \hline 
 {Poziomu zwrotu $x_{20}$} \\ 
 \hline 
- 6.689767  \\ 
+ 6.715564  \\ 
 \hline 
 \end{tabular} $$
 \bigskip
 
 \begin{minipage}[c]{14cm}
-	Poziom zwrotu obliczony metod¹ przekroczeñ progu wynosi 6.689767. Oznacza to, ¿e œrednio raz na miesi¹c wysokoœæ fal bêdzie mia³a tak¹ wartoœæ lub j¹ przekroczy.
+	Poziom zwrotu obliczony metod¹ przekroczeñ progu wynosi 6.715564. Oznacza to, ¿e œrednio raz na 20 miesiêcy wyst¹pi fala o takiej wysokoœci lub wy¿szej. Analizuj¹c powy¿sze wykresy mo¿na zauwa¿yæ, ¿e model jest dobrze dopasowany.
 \end{minipage}
 
 \bigskip
@@ -191,32 +193,41 @@ $$\begin{tabular}{|c|}
 
 \newpage
 
-\\{\bf 4. Analiza metod¹ Bootstrap.} Wygenerowano 10000 prób bootrapowych. Ka¿da próba jest œredni¹, median¹ lub wartoœci¹ maksymaln¹ puli 28 danych. 
+\\{\bf 4. Analiza metod¹ Bootstrap.} Wygenerowano 1000 prób losowych na podstawie danych empirycznych, nastêpnie aproksymowano dane faktyczne za pomoc¹ danych wygenerowanych. 
 
-$$\begin {array} {|c|c|c|c|c|}
+$$\begin {array} {|c|c|}
 \hline
-\ & \mbox{Kwantyl oryginalnych danych} & \mbox{Bootsrap: funkcja f()=max()}  & \mbox{f()=œrednia()} & \mbox{f()=mediana()} \\
+\mbox{Kwantyl poziomu $0.95$ }&  3.803075 [m] \\
+\hline
+\mbox{Obci¹¿enie} & \mbox{0.00307471} \\
 \hline              
-\mbox{$x_{20}$}&  3.8 [m] & 5.615 [m]& 2.20525 [m] & 2.322766 [m]  \\
+\mbox{Kwantyl poziomu $0.95$ z uwzglêdnieniem obci¹¿enia}&  3.796925 [m] \\
 \hline
 \end{array}$$
-
-\bigskip
-
-{\bf Wniosek: } Przy wyznaczaniu wartoœci ekstremalnych metod¹ bootstrapow¹ wybranie œredniej lub mediany jako funkcjê konwertuj¹c¹ dane jest wyj¹tkowo nieoptymalne- wyniki s¹ gorsze ni¿ przed generacj¹ próbek. Dobrze sprawdza siê natomiast funkcja max(), której wynik przekracza kwantyl oryginalnych danych.
 
 \bigskip
 \bigskip
 \bigskip
 
 \begin{itemize}
-	\item Histogram próbki bootrapowej (z funkcj¹ wyliczaj¹c¹ œrednie) z zaznaczonym kwantylem:
+	\item Rozk³ad estymatora kwantyli na próbkach bootrapowych:
 \end{itemize}
 \centerline{\includegraphics[width=16cm, height=10cm]{images-general/histogram-bootstrap}}
 
+Przedzia³ ufnoœci na poziomie 0.95:
+$$\begin {array} {|c|c|}
+\hline
+\mbox{$97.5 \%$}&  {2.5 \%} \\
+\hline
+\mbox{3.84} & \mbox{3.77} \\
+\hline
+\end{array}$$
 
 \newpage
-\\{\bf 5. Backtesting.} Backtesting przeprowadzono w pêtli 500 iteracji testuj¹c kolejne przedzia³y 1000 danych. Przetestowano dane metod¹ historyczn¹, bootstrapow¹ z funkcjami max i œrednich, metod¹ POT przekroczeñ progu oraz maksimów blokowych.
+\\{\bf 5. Backtesting.} Jest to proces testowania metod przewiduj¹cych wystêpowanie zdarzeñ ekstremalnych opieraj¹c siê na danych historycznych. Celem jest sprawdzenie jak dana strategia przewidzi faktyczne, aktualne dane. 
+\newline
+\newline
+Backtesting przeprowadzono w pêtli 3000 iteracji testuj¹c kolejne przedzia³y 1000 danych metodami BMM maksimów blokowych, POT przekroczeñ progu oraz bootstrapow¹.
 
 \bigskip
 
@@ -224,19 +235,6 @@ $$\begin {array} {|c|c|c|c|c|}
 \newline
 \centerline{\includegraphics[width=16cm, height=10cm]{images-general/backtesting}}
 
-\\{\bf 6. Podsumowanie.} Analizuj¹c powy¿sze wykresy oraz obliczenia mo¿na zauwa¿yæ, ¿e analiza metod¹ przekroczeñ progów  osi¹ga wiêkszy poziom zwrotu ni¿ metoda przekroczeñ progu (tabela  poni¿ej). Metoda bootstrapowa zwracaj¹ca œrednie wartoœci przedzia³ów danych w tym przypadku jest nieefektowna- uœredniaj¹c traci siê dane ektremalne. St¹d wniosek, ¿e w przypadku analizy wysokoœci fal metoda przekroczeñ progu (POT) jest najefektywniejsza.
-
-$$\begin {array} {|c|c|c|c|}
-\hline
-\ & \mbox{Metoda maksimów blokowych} & \mbox{Przekroczeñ progu}& \mbox{Bootstrap f=œrednia()}  \\
-\hline              
-\mbox{Poziom zwrotu $x_{20}$}&  6.602865 [m] & 6.689767 [m] & 2.20525 [m]\\
-\hline
-\mbox{Ró¿nica} & \multicolumn{2}{c|}{8,69 [cm]} &\\
-\hline
-\end{array}$$
-
-\bigskip
 \bigskip
 \bigskip
 
